@@ -1,3 +1,5 @@
 *.o
 bin_unix
+content/config.cfg
+*/cube_client
 

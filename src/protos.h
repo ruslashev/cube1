@@ -140,7 +140,6 @@ extern void editequalisexy(bool isfloor, block &sel);
 extern void edittypexy(int type, block &sel);
 extern void edittexxy(int type, int t, block &sel);
 extern void editheightxy(bool isfloor, int amount, block &sel);
-extern bool noteditmode();
 
 // renderextras
 extern void line(int x1, int y1, float z1, int x2, int y2, float z2);
