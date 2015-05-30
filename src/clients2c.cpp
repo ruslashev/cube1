@@ -265,47 +265,6 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             realpickup(getint(p), player1);
             break;
 
-        case SV_EDITH:              // coop editing messages, should be extended to include all possible editing ops
-        case SV_EDITT:
-        case SV_EDITS:
-        case SV_EDITD:
-        case SV_EDITE:
-        {
-            int x  = getint(p);
-            int y  = getint(p);
-            int xs = getint(p);
-            int ys = getint(p);
-            int v  = getint(p);
-            block b = { x, y, xs, ys };
-            switch(type)
-            {
-                case SV_EDITH: editheightxy(v!=0, getint(p), b); break;
-                case SV_EDITT: edittexxy(v, getint(p), b); break;
-                case SV_EDITS: edittypexy(v, b); break;
-                case SV_EDITD: setvdeltaxy(v, b); break;
-                case SV_EDITE: editequalisexy(v!=0, b); break;
-            };
-            break;
-        };
-
-        case SV_EDITENT:            // coop edit of ent
-        {
-            uint i = getint(p);
-            while((uint)ents.length()<=i) ents.add().type = NOTUSED;
-            int to = ents[i].type;
-            ents[i].type = getint(p);
-            ents[i].x = getint(p);
-            ents[i].y = getint(p);
-            ents[i].z = getint(p);
-            ents[i].attr1 = getint(p);
-            ents[i].attr2 = getint(p);
-            ents[i].attr3 = getint(p);
-            ents[i].attr4 = getint(p);
-            ents[i].spawned = false;
-            if(ents[i].type==LIGHT || to==LIGHT) calclight();
-            break;
-        };
-
         case SV_PING:
             getint(p);
             break;

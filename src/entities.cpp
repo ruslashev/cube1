@@ -4,7 +4,7 @@
 
 vector<entity> ents;
 
-char *entmdlnames[] = 
+char *entmdlnames[] =
 {
 	"shells", "bullets", "rockets", "rrounds", "health", "boost",
 	"g_armour", "y_armour", "quad",	"teleporter",     
@@ -150,16 +150,23 @@ void pickup(int n, dynent *d)
 {
     int np = 1;
     loopv(players) if(players[i]) np++;
-    np = np<3 ? 4 : (np>4 ? 2 : 3);         // spawn times are dependent on number of players
-    int ammo = np*2;
-    switch(ents[n].type)
-    {
-        case I_SHELLS:  additem(n, d->ammo[1], ammo); break;
-        case I_BULLETS: additem(n, d->ammo[2], ammo); break;
-        case I_ROCKETS: additem(n, d->ammo[3], ammo); break;
-        case I_ROUNDS:  additem(n, d->ammo[4], ammo); break;
-        case I_HEALTH:  additem(n, d->health,  np*5); break;
-        case I_BOOST:   additem(n, d->health,  60);   break;
+	// spawn times are dependent on number of players
+	if (np < 3)
+		np = 4;
+	else if (np > 4)
+		np = 2;
+	else
+		np = 3;
+
+	int ammo = np*2;
+	switch(ents[n].type)
+	{
+		case I_SHELLS:  additem(n, d->ammo[1], ammo); break;
+		case I_BULLETS: additem(n, d->ammo[2], ammo); break;
+		case I_ROCKETS: additem(n, d->ammo[3], ammo); break;
+		case I_ROUNDS:  additem(n, d->ammo[4], ammo); break;
+		case I_HEALTH:  additem(n, d->health,  np*5); break;
+		case I_BOOST:   additem(n, d->health,  60);   break;
 
         case I_GREENARMOUR:
             // (100h/100g only absorbs 166 damage)
@@ -206,7 +213,6 @@ void pickup(int n, dynent *d)
 
 void checkitems()
 {
-    if(editmode) return;
     loopv(ents)
     {
         entity &e = ents[i];

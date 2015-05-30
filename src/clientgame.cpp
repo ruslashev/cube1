@@ -308,7 +308,6 @@ dir(right,    strafe, -1, k_right, k_left);
 void attack(bool on)
 {
     if(intermission) return;
-    if(editmode) editdrag(on);
     else if(player1->attacking = on) respawn();
 };
 
@@ -344,7 +343,7 @@ void mousemove(int dx, int dy)
 
 void selfdamage(int damage, int actor, dynent *act)
 {
-    if(player1->state!=CS_ALIVE || editmode || intermission) return;
+    if(player1->state!=CS_ALIVE || intermission) return;
     damageblend(damage);
 	demoblend(damage);
     int ad = damage*(player1->armourtype+1)*20/100;     // let armour absorb when possible
@@ -442,7 +441,6 @@ void startmap(char *name)   // called just after a map load
     loopv(players) if(players[i]) players[i]->frags = 0;
     resetspawns();
     strcpy_s(clientmap, name);
-    if(editmode) toggleedit();
     setvar("gamespeed", 100);
 	setvar("fog", 180);
 	setvar("fogcolour", 0x8099B3);

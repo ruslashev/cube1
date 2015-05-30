@@ -73,7 +73,7 @@ void spawnmonster()     // spawn a random monster according to freq distribution
     basicmonster(type, rnd(360), M_SEARCH, 1000, 1);
 };
 
-void monsterclear()     // called after map start of when toggling edit mode to reset/spawn all monsters to initial state
+void monsterclear()     // called after map start to spawn all monsters to initial state
 {
     loopv(monsters) gp()->dealloc(monsters[i], sizeof(dynent)); 
     monsters.setsize(0);
@@ -201,7 +201,7 @@ void monsteraction(dynent *m)           // main AI thinking routine, called ever
         case M_SLEEP:                       // state classic sp monster start in, wait for visual contact
         {
             vec target;
-            if(editmode || !enemylos(m, target)) return;   // skip running physics
+            if(!enemylos(m, target)) return;   // skip running physics
             normalise(m, enemyyaw);
             float angle = (float)fabs(enemyyaw-m->yaw);
             if(disttoenemy<8                   // the better the angle to the player, the further the monster can see/hear

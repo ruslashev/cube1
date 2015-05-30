@@ -153,7 +153,7 @@ enum
     SV_EXT,
 };     
 
-enum { CS_ALIVE = 0, CS_DEAD, CS_LAGGED, CS_EDITING };
+enum { CS_ALIVE = 0, CS_DEAD, CS_LAGGED };
 
 // hardcoded sounds, defined in sounds.cfg
 enum

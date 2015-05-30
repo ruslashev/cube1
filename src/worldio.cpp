@@ -210,7 +210,6 @@ void load_world(char *mname)        // still supports all map formats that have 
 {
     stopifrecording();
     cleardlights();
-    pruneundos();
     setnames(mname);
     gzFile f = gzopen(cgzname, "rb9");
     if(!f) { conoutf("could not read map %s", cgzname); return; };

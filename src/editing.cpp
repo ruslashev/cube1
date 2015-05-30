@@ -32,29 +32,6 @@ sqr rtex;
 
 VAR(editing,0,0,1);
 
-void toggleedit()
-{
-    if(player1->state==CS_DEAD) return;                 // do not allow dead players to edit to avoid state confusion
-    if(!editmode && !allowedittoggle()) return;         // not in most multiplayer modes
-    if(!(editmode = !editmode))
-    {
-        settagareas();                                  // reset triggers to allow quick playtesting
-        entinmap(player1);                              // find spawn closest to current floating pos
-    }
-    else
-    {
-        resettagareas();                                // clear trigger areas to allow them to be edited
-        player1->health = 100;
-        if(m_classicsp) monsterclear();                 // all monsters back at their spawns for editing
-        projreset();
-    };
-    keyrepeat(editmode);
-    selset = false;
-    editing = editmode;
-};
-
-COMMANDN(edittoggle, toggleedit, ARG_NONE);
-
 void correctsel()                                       // ensures above invariant
 {
     selset = !OUTBORD(sel.x, sel.y);

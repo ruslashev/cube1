@@ -99,10 +99,9 @@ extern void renderscores();
 
 // world
 extern void setupworld(int factor);
-extern void empty_world(int factor, bool force);
+extern void empty_world(int factor);
 extern void remip(block &b, int level = 0);
 extern void remipmore(block &b, int level = 0);
-extern int closestent();
 extern int findentity(int type, int index = 0);
 extern void trigger(int tag, int type, bool savegame);
 extern void resettagareas();
@@ -136,15 +135,12 @@ extern void draw_envbox(int t, int fogdist);
 
 // editing
 extern void cursorupdate();
-extern void toggleedit();
-extern void editdrag(bool isdown);
 extern void setvdeltaxy(int delta, block &sel);
 extern void editequalisexy(bool isfloor, block &sel);
 extern void edittypexy(int type, block &sel);
 extern void edittexxy(int type, int t, block &sel);
 extern void editheightxy(bool isfloor, int amount, block &sel);
 extern bool noteditmode();
-extern void pruneundos(int maxremain = 0);
 
 // renderextras
 extern void line(int x1, int y1, float z1, int x2, int y2, float z2);
@@ -233,7 +229,6 @@ extern void monsterpain(dynent *m, int damage, dynent *d);
 extern void endsp(bool allkilled);
 
 // entities
-extern void renderents();
 extern void putitems(uchar *&p);
 extern void checkquad(int time);
 extern void checkitems();

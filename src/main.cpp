@@ -37,9 +37,10 @@ void fatal(char *s, char *o)    // failure exit
 
 void *alloc(int s)              // for some big chunks... most other allocs use the memory pool
 {
-    void *b = calloc(1,s);
-    if(!b) fatal("out of memory!");
-    return b;
+	void *b = calloc(1, s);
+	if(!b)
+		fatal("out of memory!");
+	return b;
 };
 
 int scr_w = 640;
@@ -85,7 +86,7 @@ int islittleendian = 1;
 int framesinmap = 0;
 
 int main(int argc, char **argv)
-{    
+{
     bool dedicated = false;
     int fs = SDL_FULLSCREEN, par = 0, uprate = 0, maxcl = 4;
     char *sdesc = "", *ip = "", *master = NULL, *passwd = "";
@@ -93,7 +94,7 @@ int main(int argc, char **argv)
 
     #define log(s) conoutf("init: %s", s)
     log("sdl");
-    
+
     for(int i = 1; i<argc; i++)
     {
         char *a = &argv[i][2];
@@ -113,7 +114,7 @@ int main(int argc, char **argv)
         }
         else conoutf("unknown commandline argument");
     };
-    
+
     #ifdef _DEBUG
     par = SDL_INIT_NOPARACHUTE;
     fs = 0;
@@ -128,7 +129,7 @@ int main(int argc, char **argv)
     initserver(dedicated, uprate, sdesc, ip, master, passwd, maxcl);  // never returns if dedicated
       
     log("world");
-    empty_world(7, true);
+    empty_world(7);
 
     log("video: sdl");
     if(SDL_InitSubSystem(SDL_INIT_VIDEO)<0) fatal("Unable to initialize SDL Video");

@@ -28,7 +28,6 @@ void renderclient(dynent *d, bool team, char *mdlname, bool hellpig, float scale
         //mz = d->o.z-d->eyeheight+0.2f;
         //scale = 1.2f;
     }
-    else if(d->state==CS_EDITING)                   { n = 16; }
     else if(d->state==CS_LAGGED)                    { n = 17; }
     else if(d->monsterstate==M_ATTACKING)           { n = 8;  }
     else if(d->monsterstate==M_PAIN)                { n = 10; } 

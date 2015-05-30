@@ -138,7 +138,6 @@ void renderspheres(int time)
     glDepthMask(GL_TRUE);
 };
 
-string closeent;
 char *entnames[] =
 {
     "none?", "light", "playerstart",
@@ -147,25 +146,6 @@ char *entnames[] =
     "teleport", "teledest", 
     "mapmodel", "monster", "trigger", "jumppad",
     "?", "?", "?", "?", "?", 
-};
-
-void renderents()       // show sparkly thingies for map entities in edit mode
-{
-    closeent[0] = 0;
-    if(!editmode) return;
-    loopv(ents)
-    {
-        entity &e = ents[i];
-        if(e.type==NOTUSED) continue;
-        vec v = { e.x, e.y, e.z };
-        particle_splash(2, 2, 40, v);
-    };
-    int e = closestent();
-    if(e>=0)
-    {
-        entity &c = ents[e];
-        sprintf_s(closeent)("closest entity = %s (%d, %d, %d, %d), selection = (%d, %d)", entnames[c.type], c.attr1, c.attr2, c.attr3, c.attr4, getvar("selxs"), getvar("selys"));
-    };
 };
 
 void loadsky(char *basename)
@@ -265,7 +245,7 @@ VARP(crosshairfx, 0, 1, 1);
 void gl_drawhud(int w, int h, int curfps, int nquads, int curvert, bool underwater)
 {
     readmatrices();
-    if(editmode)
+    if(0) // todo
     {
         if(cursordepth==1.0f) worldpos = player1->o;
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -301,7 +281,6 @@ void gl_drawhud(int w, int h, int curfps, int nquads, int curvert, bool underwat
     char *command = getcurcommand();
     char *player = playerincrosshair();
     if(command) draw_textf("> %s_", 20, 1570, 2, command);
-    else if(closeent[0]) draw_text(closeent, 20, 1570, 2);
     else if(player) draw_text(player, 20, 1570, 2);
 
     renderscores();

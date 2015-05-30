@@ -36,7 +36,7 @@ void settag(int tag, int type)          // set all cubes with "tag" to space, if
     if(maxx) remip(b);      // remip minimal area of changed geometry
 };
 
-void resettagareas() { settag(0, 0); };                                                         // reset for editing or map saving
+void resettagareas() { settag(0, 0); };                                                         // reset for map saving
 void settagareas() { settag(0, 1); loopv(ents) if(ents[i].type==CARROT) setspawn(i, true); };   // set for playing
 
 void trigger(int tag, int type, bool savegame)
@@ -158,50 +158,6 @@ void remipmore(block &b, int level)
     remip(bb, level);
 };
 
-int closestent()        // used for delent and edit mode ent display
-{
-    if(noteditmode()) return -1;
-    int best;
-    float bdist = 99999;
-    loopv(ents)
-    {
-        entity &e = ents[i];
-        if(e.type==NOTUSED) continue;
-        vec v = { e.x, e.y, e.z };
-        vdist(dist, t, player1->o, v);
-        if(dist<bdist)
-        {
-            best = i;
-            bdist = dist;
-        };
-    };
-    return bdist==99999 ? -1 : best; 
-};
-
-void entproperty(int prop, int amount)
-{
-    int e = closestent();
-    if(e<0) return;
-    switch(prop)
-    {
-        case 0: ents[e].attr1 += amount; break;
-        case 1: ents[e].attr2 += amount; break;
-        case 2: ents[e].attr3 += amount; break;
-        case 3: ents[e].attr4 += amount; break;
-    };
-};
-
-void delent()
-{
-    int e = closestent();
-    if(e<0) { conoutf("no more entities"); return; };
-    int t = ents[e].type;
-    conoutf("%s entity deleted", entnames[t]);
-    ents[e].type = NOTUSED;
-    addmsg(1, 10, SV_EDITENT, e, NOTUSED, 0, 0, 0, 0, 0, 0, 0);
-    if(t==LIGHT) calclight();
-};
-
 int findtype(char *what)
 {
     loopi(MAXENTTYPES) if(strcmp(what, entnames[i])==0) return i;
@@ -236,20 +192,6 @@ entity *newentity(int x, int y, int z, char *what, int v1, int v2, int v3, int v
     if(type==LIGHT) calclight();
     return &ents.last();
 };
-
-void clearents(char *name)
-{  
-    int type = findtype(name);
-    if(noteditmode() || multiplayer()) return;
-    loopv(ents)
-    {
-        entity &e = ents[i];
-        if(e.type==type) e.type = NOTUSED;
-    };
-    if(type==LIGHT) calclight();
-};
-
-COMMAND(clearents, ARG_1STR);
 
 void scalecomp(uchar &c, int intens)
 {
@@ -297,14 +239,10 @@ void setupworld(int factor)
     loopi(LARGEST_FACTOR*2) { wmip[i] = w; w += cubicsize>>(i*2); };
 };
 
-void empty_world(int factor, bool force)    // main empty world creation routine, if passed factor -1 will enlarge old world by 1
+void empty_world(int factor)    // main empty world creation routine, if passed factor -1 will enlarge old world by 1
 {
-    if(!force && noteditmode()) return; 
     cleardlights();
-    pruneundos();
     sqr *oldworld = world;
-    bool copy = false;
-    if(oldworld && factor<0) { factor = sfactor+1; copy = true; };
     if(factor<SMALLEST_FACTOR) factor = SMALLEST_FACTOR;
     if(factor>LARGEST_FACTOR) factor = LARGEST_FACTOR;
     setupworld(factor);
@@ -328,45 +266,22 @@ void empty_world(int factor, bool force)    // main empty world creation routine
     hdr.headersize = sizeof(header);
     hdr.sfactor = sfactor;
 
-    if(copy)
-    {
-        loop(x,ssize/2) loop(y,ssize/2)
-        {
-            *S(x+ssize/4, y+ssize/4) = *SWS(oldworld, x, y, ssize/2);
-        };
-        loopv(ents)
-        {
-            ents[i].x += ssize/4;
-            ents[i].y += ssize/4;
-        };
-    }
-    else
-    {
-        strn0cpy(hdr.maptitle, "Untitled Map by Unknown", 128);
-        hdr.waterlevel = -100000;
-        loopi(15) hdr.reserved[i] = 0;
-        loopk(3) loopi(256) hdr.texlists[k][i] = i;
-        ents.setsize(0);
-        block b = { 8, 8, ssize-16, ssize-16 }; 
-        edittypexy(SPACE, b);
-    };
-    
+	strn0cpy(hdr.maptitle, "Untitled Map by Unknown", 128);
+	hdr.waterlevel = -100000;
+	loopi(15) hdr.reserved[i] = 0;
+	loopk(3) loopi(256) hdr.texlists[k][i] = i;
+	ents.setsize(0);
+	block b = { 8, 8, ssize-16, ssize-16 }; 
+	edittypexy(SPACE, b);
+
     calclight();
     startmap("base/unnamed");
     if(oldworld)
     {
         free(oldworld);
-        toggleedit();
         execute("fullbright 1");
     };
 };
 
-void mapenlarge()  { empty_world(-1, false); };
-void newmap(int i) { empty_world(i, false); };
-
-COMMAND(mapenlarge, ARG_NONE);
-COMMAND(newmap, ARG_1INT);
 COMMANDN(recalc, calclight, ARG_NONE);
-COMMAND(delent, ARG_NONE);
-COMMAND(entproperty, ARG_2INT);
 

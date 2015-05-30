@@ -188,7 +188,6 @@ void physicsframe()          // optimally schedule physics frames inside the gra
 void moveplayer(dynent *pl, int moveres, bool local, int curtime)
 {
     const bool water = hdr.waterlevel>pl->o.z-0.5f;
-    const bool floating = (editmode && local) || pl->state==CS_EDITING;
 
     vec d;      // vector of direction we ideally want to move in
 
@@ -196,7 +195,7 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
     d.y = (float)(pl->move*sin(rad(pl->yaw-90)));
     d.z = 0;
 
-    if(floating || water)
+    if(water)
     {
         d.x *= (float)cos(rad(pl->pitch));
         d.y *= (float)cos(rad(pl->pitch));
@@ -207,7 +206,7 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
     d.y += (float)(pl->strafe*sin(rad(pl->yaw-180)));
 
     const float speed = curtime/(water ? 2000.0f : 1000.0f)*pl->maxspeed;
-    const float friction = water ? 20.0f : (pl->onfloor || floating ? 6.0f : 30.0f);
+    const float friction = water ? 20.0f : (pl->onfloor ? 6.0f : 30.0f);
 
     const float fpsfric = friction/curtime*20.0f;   
     
@@ -220,67 +219,60 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
     pl->blocked = false;
     pl->moving = true;
 
-    if(floating)                // just apply velocity
-    {
-        vadd(pl->o, d);
-        if(pl->jumpnext) { pl->jumpnext = false; pl->vel.z = 2;    }
-    }
-    else                        // apply velocity with collision
-    {
-        if(pl->onfloor || water)
-        {
-            if(pl->jumpnext)
-            {
-                pl->jumpnext = false;
-                pl->vel.z = 1.7f;       // physics impulse upwards
-                if(water) { pl->vel.x /= 8; pl->vel.y /= 8; };      // dampen velocity change even harder, gives correct water feel
-                if(local) playsoundc(S_JUMP);
-                else if(pl->monsterstate) playsound(S_JUMP, &pl->o);
-            }
-            else if(pl->timeinair>800)  // if we land after long time must have been a high jump, make thud sound
-            {
-                if(local) playsoundc(S_LAND);
-                else if(pl->monsterstate) playsound(S_LAND, &pl->o);
-            };
-            pl->timeinair = 0;
-        }
-        else
-        {
-            pl->timeinair += curtime;
-        };
+    // apply velocity with collision
+	if(pl->onfloor || water)
+	{
+		if(pl->jumpnext)
+		{
+			pl->jumpnext = false;
+			pl->vel.z = 1.7f;       // physics impulse upwards
+			if(water) { pl->vel.x /= 8; pl->vel.y /= 8; };      // dampen velocity change even harder, gives correct water feel
+			if(local) playsoundc(S_JUMP);
+			else if(pl->monsterstate) playsound(S_JUMP, &pl->o);
+		}
+		else if(pl->timeinair>800)  // if we land after long time must have been a high jump, make thud sound
+		{
+			if(local) playsoundc(S_LAND);
+			else if(pl->monsterstate) playsound(S_LAND, &pl->o);
+		};
+		pl->timeinair = 0;
+	}
+	else
+	{
+		pl->timeinair += curtime;
+	};
 
-        const float gravity = 20;
-        const float f = 1.0f/moveres;
-        float dropf = ((gravity-1)+pl->timeinair/15.0f);        // incorrect, but works fine
-        if(water) { dropf = 5; pl->timeinair = 0; };            // float slowly down in water
-        const float drop = dropf*curtime/gravity/100/moveres;   // at high fps, gravity kicks in too fast
-        const float rise = speed/moveres/1.2f;                  // extra smoothness when lifting up stairs
+	const float gravity = 20;
+	const float f = 1.0f/moveres;
+	float dropf = ((gravity-1)+pl->timeinair/15.0f);        // incorrect, but works fine
+	if(water) { dropf = 5; pl->timeinair = 0; };            // float slowly down in water
+	const float drop = dropf*curtime/gravity/100/moveres;   // at high fps, gravity kicks in too fast
+	const float rise = speed/moveres/1.2f;                  // extra smoothness when lifting up stairs
 
-        loopi(moveres)                                          // discrete steps collision detection & sliding
-        {
-            // try move forward
-            pl->o.x += f*d.x;
-            pl->o.y += f*d.y;
-            pl->o.z += f*d.z;
-            if(collide(pl, false, drop, rise)) continue;                     
-            // player stuck, try slide along y axis
-            pl->blocked = true;
-            pl->o.x -= f*d.x;
-            if(collide(pl, false, drop, rise)) { d.x = 0; continue; };   
-            pl->o.x += f*d.x;
-            // still stuck, try x axis
-            pl->o.y -= f*d.y;
-            if(collide(pl, false, drop, rise)) { d.y = 0; continue; };       
-            pl->o.y += f*d.y;
-            // try just dropping down
-            pl->moving = false;
-            pl->o.x -= f*d.x;
-            pl->o.y -= f*d.y;
-            if(collide(pl, false, drop, rise)) { d.y = d.x = 0; continue; }; 
-            pl->o.z -= f*d.z;
-            break;
-        };
-    };
+	loopi(moveres)                                          // discrete steps collision detection & sliding
+	{
+		// try move forward
+		pl->o.x += f*d.x;
+		pl->o.y += f*d.y;
+		pl->o.z += f*d.z;
+		if(collide(pl, false, drop, rise)) continue;                     
+		// player stuck, try slide along y axis
+		pl->blocked = true;
+		pl->o.x -= f*d.x;
+		if(collide(pl, false, drop, rise)) { d.x = 0; continue; };   
+		pl->o.x += f*d.x;
+		// still stuck, try x axis
+		pl->o.y -= f*d.y;
+		if(collide(pl, false, drop, rise)) { d.y = 0; continue; };       
+		pl->o.y += f*d.y;
+		// try just dropping down
+		pl->moving = false;
+		pl->o.x -= f*d.x;
+		pl->o.y -= f*d.y;
+		if(collide(pl, false, drop, rise)) { d.y = d.x = 0; continue; }; 
+		pl->o.z -= f*d.z;
+		break;
+	};
 
     // detect wether player is outside map, used for skipping zbuffer clear mostly
 
