@@ -7,3 +7,5 @@ archives, which hopefully will never get lost, but who can know for sure.
 These are `cube_2005_08_29_src.zip` `cube_2005_08_29_unix.tar.gz` freely
 availiable on the Internet.
 
+The file `readme.txt` is the original readme distributed with source.
+
