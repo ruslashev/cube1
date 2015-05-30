@@ -1,5 +1,5 @@
 CXX=g++
-CXXOPTFLAGS=-Wall -O3 -fsigned-char -fomit-frame-pointer -fpermissive -W
+CXXOPTFLAGS=-Wall -O3 -fsigned-char -fomit-frame-pointer -fpermissive -w -Wno-Write-strings -Wno-Unused-variable
 CXXFLAGS=$(CXXOPTFLAGS) -I../enet/include `sdl-config --cflags`
 
 CLIENT_LIBS=-L../enet -lenet `sdl-config --libs` -lSDL_image -lSDL_mixer -lz -lGL -lGLU -lX11
@@ -47,6 +47,9 @@ SERVER_OBJS= \
 default: all
 
 all: enet client server
+	cp cube_client ../content && \
+	cd ../content && \
+	./cube_client
 
 enet:
 	-make -C ../enet all
@@ -62,5 +65,5 @@ client: $(CLIENT_OBJS)
 	$(CXX) $(CXXFLAGS) -o cube_client $(CLIENT_OBJS) $(CLIENT_LIBS)
 
 server: $(SERVER_OBJS)
-	$(CXX) $(CXXFLAGS) -o cube_server $(SERVER_OBJS) $(SERVER_LIBS)  
-	
+	$(CXX) $(CXXFLAGS) -o cube_server $(SERVER_OBJS) $(SERVER_LIBS)
+
