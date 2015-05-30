@@ -484,4 +484,3 @@ COMMAND(edittex, ARG_2INT);
 COMMAND(newent, ARG_5STR);
 COMMAND(perlin, ARG_3INT);
 
-

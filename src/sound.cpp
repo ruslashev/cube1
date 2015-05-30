@@ -224,3 +224,4 @@ void playsound(int n, vec *loc)
 
 void sound(int n) { playsound(n, NULL); };
 COMMAND(sound, ARG_1INT);
+

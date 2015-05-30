@@ -252,3 +252,4 @@ void writebinds(FILE *f)
         if(*keyms[i].action) fprintf(f, "bind \"%s\" [%s]\n", keyms[i].name, keyms[i].action);
     };
 };
+

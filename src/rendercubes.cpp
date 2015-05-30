@@ -356,4 +356,3 @@ void resetcubes()
     sdark.r = sdark.g = sdark.b = 0;
 };
 
-

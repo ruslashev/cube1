@@ -453,3 +453,4 @@ void startmap(char *name)   // called just after a map load
 }; 
 
 COMMANDN(map, changemap, ARG_1STR);
+

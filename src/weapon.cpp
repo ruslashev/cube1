@@ -339,4 +339,3 @@ void shoot(dynent *d, vec &targ)
     if(d->monsterstate) raydamage(player1, from, to, d, -1);
 };
 
-

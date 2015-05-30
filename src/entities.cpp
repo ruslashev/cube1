@@ -240,3 +240,4 @@ void putitems(uchar *&p)            // puts items in network stream and also spa
 
 void resetspawns() { loopv(ents) ents[i].spawned = false; };
 void setspawn(uint i, bool on) { if(i<(uint)ents.length()) ents[i].spawned = on; };
+

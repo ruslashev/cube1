@@ -300,4 +300,3 @@ void writeservercfg()
     fclose(f);
 };
 
-

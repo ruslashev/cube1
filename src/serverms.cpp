@@ -139,3 +139,4 @@ void servermsinit(const char *master, char *sdesc, bool listen)
         if(pongsock == ENET_SOCKET_NULL) fatal("could not create server info socket\n");
 	};
 };
+
