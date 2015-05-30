@@ -134,11 +134,7 @@ extern int text_width(char *str);
 extern void draw_envbox(int t, int fogdist);
 
 // editing
-extern void cursorupdate();
-extern void setvdeltaxy(int delta, block &sel);
-extern void editequalisexy(bool isfloor, block &sel);
 extern void edittypexy(int type, block &sel);
-extern void edittexxy(int type, int t, block &sel);
 extern void editheightxy(bool isfloor, int amount, block &sel);
 
 // renderextras

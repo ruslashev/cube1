@@ -245,13 +245,6 @@ VARP(crosshairfx, 0, 1, 1);
 void gl_drawhud(int w, int h, int curfps, int nquads, int curvert, bool underwater)
 {
     readmatrices();
-    if(0) // todo
-    {
-        if(cursordepth==1.0f) worldpos = player1->o;
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        cursorupdate();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    };
 
     glDisable(GL_DEPTH_TEST);
     invertperspective();
