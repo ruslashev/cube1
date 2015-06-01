@@ -104,7 +104,7 @@ void sendservmsg(char *msg)
 void disconnect_client(int n, char *reason)
 {
     printf("disconnecting client (%s) [%s]\n", clients[n].hostname, reason);
-    enet_peer_disconnect(clients[n].peer);
+    enet_peer_disconnect(clients[n].peer, 0);
     clients[n].type = ST_EMPTY;
     send2(true, -1, SV_CDIS, n);
 };
@@ -448,7 +448,7 @@ void initserver(bool dedicated, int uprate, char *sdesc, char *ip, char *master,
     {
         ENetAddress address = { ENET_HOST_ANY, CUBE_SERVER_PORT };
         if(*ip && enet_address_set_host(&address, ip)<0) printf("WARNING: server ip not resolved");
-        serverhost = enet_host_create(&address, MAXCLIENTS, 0, uprate);
+        serverhost = enet_host_create(&address, MAXCLIENTS, 0, 0, uprate);
         if(!serverhost) fatal("could not create server host\n");
         loopi(MAXCLIENTS) serverhost->peers[i].data = (void *)-1;
     };

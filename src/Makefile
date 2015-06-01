@@ -1,8 +1,8 @@
 CXX=g++
 CXXOPTFLAGS=-Wall -O3 -fsigned-char -fomit-frame-pointer -fpermissive -w -Wno-Write-strings -Wno-Unused-variable
-CXXFLAGS=$(CXXOPTFLAGS) -I../enet/include `sdl-config --cflags`
+CXXFLAGS=$(CXXOPTFLAGS) `sdl-config --cflags`
 
-CLIENT_LIBS=-L../enet -lenet `sdl-config --libs` -lSDL_image -lSDL_mixer -lz -lGL -lGLU -lX11
+CLIENT_LIBS=-lenet `sdl-config --libs` -lSDL_image -lSDL_mixer -lz -lGL -lGLU -lX11
 CLIENT_OBJS= \
 	client.o \
 	clientextras.o \
@@ -37,7 +37,7 @@ CLIENT_OBJS= \
 	worldocull.o \
 	worldrender.o
 
-SERVER_LIBS=-L../enet -lenet
+SERVER_LIBS=-lenet
 SERVER_OBJS= \
 	standalone.o \
 	serverms.o \
@@ -46,17 +46,13 @@ SERVER_OBJS= \
 
 default: all
 
-all: enet client server
+all: client server
 	cp cube_client ../content && \
 	cd ../content && \
 	./cube_client
 
-enet:
-	-make -C ../enet all
-
 clean:
 	-rm -f $(SERVER_OBJS) $(CLIENT_OBJS) cube_server cube_client
-	-make -C ../enet/ clean
 
 standalone.o:
 	$(CXX) $(CXXFLAGS) -DSTANDALONE -o standalone.o -c serverutil.cpp

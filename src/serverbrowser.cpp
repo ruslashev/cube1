@@ -268,7 +268,7 @@ void servermenu()
 {
     if(pingsock == ENET_SOCKET_NULL)
     {
-        pingsock = enet_socket_create(ENET_SOCKET_TYPE_DATAGRAM, NULL);
+        pingsock = enet_socket_create(ENET_SOCKET_TYPE_DATAGRAM);
         resolverinit(1, 1000);
     };
     resolverclear();
