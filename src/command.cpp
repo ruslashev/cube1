@@ -40,7 +40,7 @@ void alias(char *name, char *action)
 
 COMMAND(alias, ARG_2STR);
 
-// variable's and commands are registered through globals, see cube.h
+// variables and commands are registered through globals, see cube.h
 
 int variable(char *name, int min, int cur, int max, int *storage, void (*fun)(), bool persist)
 {
@@ -93,7 +93,7 @@ char *parseexp(char *&p, int right)             // parse any nested set of () or
 char *parseword(char *&p)                       // parse single argument, including expressions
 {
     p += strspn(p, " \t\r");
-    if(p[0]=='/' && p[1]=='/') p += strcspn(p, "\n\0");  
+    if(p[0]=='/' && p[1]=='/') p += strcspn(p, "\n\0");
     if(*p=='\"')
     {
         p++;
@@ -140,13 +140,13 @@ int execute(char *p, bool isdown)               // all evaluation happens here, 
             if(*s=='$') s = lookup(s);          // substitute variables
             w[i] = s;
         };
-        
+
         p += strcspn(p, ";\n\0");
         cont = *p++!=0;                         // more statements if this isn't the end of the string
         char *c = w[0];
         if(*c=='/') c++;                        // strip irc-style command prefix
         if(!*c) continue;                       // empty statement
-        
+
         ident *id = idents->access(c);
         if(!id)
         {
@@ -155,9 +155,9 @@ int execute(char *p, bool isdown)               // all evaluation happens here, 
         }
         else switch(id->type)
         {
-            case ID_COMMAND:                    // game defined commands       
+            case ID_COMMAND:                    // game defined commands
                 switch(id->narg)                // use very ad-hoc function signature, and just call it
-                { 
+                {
                     case ARG_1INT: if(isdown) ((void (__cdecl *)(int))id->fun)(ATOI(w[1])); break;
                     case ARG_2INT: if(isdown) ((void (__cdecl *)(int, int))id->fun)(ATOI(w[1]), ATOI(w[2])); break;
                     case ARG_3INT: if(isdown) ((void (__cdecl *)(int, int, int))id->fun)(ATOI(w[1]), ATOI(w[2]), ATOI(w[3])); break;
@@ -177,7 +177,7 @@ int execute(char *p, bool isdown)               // all evaluation happens here, 
                     {
                         string r;               // limit, remove
                         r[0] = 0;
-                        for(int i = 1; i<numargs; i++)       
+                        for(int i = 1; i<numargs; i++)
                         {
                             strcat_s(r, w[i]);  // make string-list out of all arguments
                             if(i==numargs-1) break;
@@ -188,8 +188,8 @@ int execute(char *p, bool isdown)               // all evaluation happens here, 
                     }
                 };
                 break;
-       
-            case ID_VAR:                        // game defined variabled 
+
+            case ID_VAR:                        // game defined variabled
                 if(isdown)
                 {
                     if(!w[1][0]) conoutf("%s = %d", c, *id->storage);      // var with no value just prints its current value
@@ -213,7 +213,7 @@ int execute(char *p, bool isdown)               // all evaluation happens here, 
                     };
                 };
                 break;
-                
+
             case ID_ALIAS:                              // alias, also used as functions and (global) variables
                 for(int i = 1; i<numargs; i++)
                 {
@@ -316,7 +316,7 @@ void concat(char *s) { alias("s", s); };
 
 void concatword(char *s)
 {
-    for(char *a = s, *b = s; *a = *b; b++) if(*a!=' ') a++;   
+    for(char *a = s, *b = s; *a = *b; b++) if(*a!=' ') a++;
     concat(s);
 };
 
@@ -338,7 +338,7 @@ void at(char *s, char *pos)
 
 COMMANDN(loop, loopa, ARG_2STR);
 COMMANDN(while, whilea, ARG_2STR);
-COMMANDN(if, ifthen, ARG_3STR); 
+COMMANDN(if, ifthen, ARG_3STR);
 COMMAND(onrelease, ARG_DWN1);
 COMMAND(exec, ARG_1STR);
 COMMAND(concat, ARG_VARI);

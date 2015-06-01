@@ -88,7 +88,7 @@ char *pool::string(char *s, size_t l)
     char *b = (char *)alloc(l+1);
     strncpy(b,s,l);
     b[l] = 0;
-    return b;  
+    return b;
 };
 
 pool *gp()  // useful for global buffers that need to be initialisation order independant
@@ -118,7 +118,7 @@ char *loadfile(char *fn, int *size)
     buf[len] = 0;
     size_t rlen = fread(buf, 1, len, f);
     fclose(f);
-    if(len!=rlen || len<=0) 
+    if(len!=rlen || len<=0)
     {
         free(buf);
         return NULL;

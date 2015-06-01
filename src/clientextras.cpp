@@ -30,10 +30,10 @@ void renderclient(dynent *d, bool team, char *mdlname, bool hellpig, float scale
     }
     else if(d->state==CS_LAGGED)                    { n = 17; }
     else if(d->monsterstate==M_ATTACKING)           { n = 8;  }
-    else if(d->monsterstate==M_PAIN)                { n = 10; } 
-    else if((!d->move && !d->strafe) || !d->moving) { n = 12; } 
+    else if(d->monsterstate==M_PAIN)                { n = 10; }
+    else if((!d->move && !d->strafe) || !d->moving) { n = 12; }
     else if(!d->onfloor && d->timeinair>100)        { n = 18; }
-    else                                            { n = 14; speed = 1200/d->maxspeed*scale; if(hellpig) speed = 300/d->maxspeed;  }; 
+    else                                            { n = 14; speed = 1200/d->maxspeed*scale; if(hellpig) speed = 300/d->maxspeed;  };
     if(hellpig) { n++; scale *= 32; mz -= 1.9f; };
     rendermodel(mdlname, frame[n], range[n], 0, 1.5f, d->o.x, mz, d->o.y, d->yaw+90, d->pitch/2, team, scale, speed, 0, basetime);
 };
@@ -62,9 +62,9 @@ vector<sline> scorelines;
 void renderscore(dynent *d)
 {
     sprintf_sd(lag)("%d", d->plag);
-    sprintf_sd(name) ("(%s)", d->name); 
+    sprintf_sd(name) ("(%s)", d->name);
     sprintf_s(scorelines.add().s)("%d\t%s\t%d\t%s\t%s", d->frags, d->state==CS_LAGGED ? "LAG" : lag, d->ping, d->team, d->state==CS_DEAD ? name : d->name);
-    menumanual(0, scorelines.length()-1, scorelines.last().s); 
+    menumanual(0, scorelines.length()-1, scorelines.last().s);
 };
 
 const int maxteams = 4;
@@ -113,7 +113,7 @@ void sendmap(char *mapname)
     changemap(mapname);
     mapname = getclientmap();
     int mapsize;
-    uchar *mapdata = readmap(mapname, &mapsize); 
+    uchar *mapdata = readmap(mapname, &mapsize);
     if(!mapdata) return;
     ENetPacket *packet = enet_packet_create(NULL, MAXTRANS + mapsize, ENET_PACKET_FLAG_RELIABLE);
     uchar *start = packet->data;
@@ -130,7 +130,7 @@ void sendmap(char *mapname)
     };
     memcpy(p, mapdata, mapsize);
     p += mapsize;
-    free(mapdata); 
+    free(mapdata);
     *(ushort *)start = ENET_HOST_TO_NET_16(p-start);
     enet_packet_resize(packet, p-start);
     sendpackettoserv(packet);

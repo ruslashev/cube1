@@ -65,10 +65,10 @@ void computeraytable(float vx, float vy)
 // test occlusion for a cube... one of the most computationally expensive functions in the engine
 // as its done for every cube and entity, but its effect is more than worth it!
 
-inline float ca(float x, float y) { return x>y ? y/x : 2-x/y; }; 
+inline float ca(float x, float y) { return x>y ? y/x : 2-x/y; };
 inline float ma(float x, float y) { return x==0 ? (y>0 ? 2 : -2) : y/x; };
 
-int isoccluded(float vx, float vy, float cx, float cy, float csize)     // v = viewer, c = cube to test 
+int isoccluded(float vx, float vy, float cx, float cy, float csize)     // v = viewer, c = cube to test
 {
     if(!ocull) return 0;
 
@@ -123,7 +123,7 @@ int isoccluded(float vx, float vy, float cx, float cy, float csize)     // v = v
         else                { h = ca(cx+csize-vx, cy-vy); l = ca(cx-vx, cy+csize-vy); };                            // H
     };
     int si = fast_f2nat(h*(NUMRAYS/8))+NUMRAYS;     // get indexes into occlusion map from angles
-    int ei = fast_f2nat(l*(NUMRAYS/8))+NUMRAYS+1; 
+    int ei = fast_f2nat(l*(NUMRAYS/8))+NUMRAYS+1;
     if(ei<=si) ei += NUMRAYS;
 
     for(int i = si; i<=ei; i++)

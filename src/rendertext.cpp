@@ -2,7 +2,7 @@
 
 #include "cube.h"
 
-short char_coords[96][4] = 
+short char_coords[96][4] =
 {
     {0,0,25,64},        //!
     {25,0,54,64},       //"
@@ -106,8 +106,8 @@ int text_width(char *str)
     for (int i = 0; str[i] != 0; i++)
     {
         int c = str[i];
-        if(c=='\t') { x = (x+PIXELTAB)/PIXELTAB*PIXELTAB; continue; }; 
-        if(c=='\f') continue; 
+        if(c=='\t') { x = (x+PIXELTAB)/PIXELTAB*PIXELTAB; continue; };
+        if(c=='\f') continue;
         if(c==' ') { x += FONTH/2; continue; };
         c -= 33;
         if(c<0 || c>=95) continue;
@@ -140,7 +140,7 @@ void draw_text(char *str, int left, int top, int gl_num)
     for (i = 0; str[i] != 0; i++)
     {
         int c = str[i];
-        if(c=='\t') { x = (x-left+PIXELTAB)/PIXELTAB*PIXELTAB+left; continue; }; 
+        if(c=='\t') { x = (x-left+PIXELTAB)/PIXELTAB*PIXELTAB+left; continue; };
         if(c=='\f') { glColor3ub(64,255,128); continue; };
         if(c==' ') { x += FONTH/2; continue; };
         c -= 33;
@@ -160,7 +160,7 @@ void draw_text(char *str, int left, int top, int gl_num)
         glTexCoord2f(in_right, in_bottom); glVertex2i(x + in_width, y + in_height);
         glTexCoord2f(in_left,  in_bottom); glVertex2i(x,            y + in_height);
         glEnd();
-        
+
         xtraverts += 4;
         x += in_width  + 1;
     }

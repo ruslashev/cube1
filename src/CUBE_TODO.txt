@@ -11,7 +11,7 @@
 - fps = (1000.0f/(curtime ? curtime : 1)+fps*50)/51  // somehow curtime gets to be 0 even if fps is only 150 on linux
 - make serverinfo in server port obey -i
 - make spawns more random
-- automatic team assignment 
+- automatic team assignment
 - configurable serverport
 - force respawn
 - delay for player in xhair
@@ -63,8 +63,8 @@
 - do something about people having wrong maps etc / map cheating / make auto map download
 - super simple CTF using pickup - drop off idea pxtl ? no team spawns required!
 - allow monster spawn on trigger?
-- VWEP (slith has own weapons), muzzle flash? 
-- About 2 out of 3 times I start Cube (Linux Version), the fps counter displays -214748 
+- VWEP (slith has own weapons), muzzle flash?
+- About 2 out of 3 times I start Cube (Linux Version), the fps counter displays -214748
 - make water render not everywhere to reduce sparklies
 - vertex/fragment programs
   global: millis, eye, eyeorient
@@ -80,7 +80,7 @@
 - mapmodels above eachother gives incorrect physics
 - fps reporting on demos.../ teleport to spawn?
 - improve sounds
-- Ability to get attributes of a single cube at $xsel, $ysel. 
+- Ability to get attributes of a single cube at $xsel, $ysel.
 - Ability to get the current users position (or cursor position, X,Y & height)
 - Provide Absolute mode in at least functions edittex,editheight,vdelta.
 - no text when dead? / round over while dead? -> more lag than appearent
@@ -276,7 +276,7 @@ changes for bigger landscapes:
 - hf: hom next to big mips / water height
 - make correct collision for slopes
 - push/pull vertex tools
-- different scale: *2 in xy, and /2 in z, ratio is then 1:4 (so float hf can be removed) 
+- different scale: *2 in xy, and /2 in z, ratio is then 1:4 (so float hf can be removed)
 - more tree/plant map models
 - optimize certain code for 2k^2 maps.. lighting?
 - cut&paste entities also?

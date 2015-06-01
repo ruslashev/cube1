@@ -9,3 +9,9 @@ availiable on the Internet.
 
 The file `readme.txt` is the original readme distributed with source.
 
+## The changes
+
+First of all, I removed the editing. IMO there's no place for it, perhaps
+there can be a standalone version separate from the game. Anyway, the
+editing itself is inferior to the Cube 2's in-game editor.
+

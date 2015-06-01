@@ -45,7 +45,7 @@ void savestate(char *fn)
     f = gzopen(fn, "wb9");
     if(!f) { conoutf("could not write %s", fn); return; };
     gzwrite(f, (void *)"CUBESAVE", 8);
-    gzputc(f, islittleendian);  
+    gzputc(f, islittleendian);
     gzputi(SAVEGAMEVERSION);
     gzputi(sizeof(dynent));
     gzwrite(f, getclientmap(), _MAXDEFSTR);
@@ -79,7 +79,7 @@ void loadstate(char *fn)
     if(multiplayer()) return;
     f = gzopen(fn, "rb9");
     if(!f) { conoutf("could not open %s", fn); return; };
-    
+
     string buf;
     gzread(f, buf, 8);
     if(strncmp(buf, "CUBESAVE", 8)) goto out;
@@ -88,9 +88,9 @@ void loadstate(char *fn)
     string mapname;
     gzread(f, mapname, _MAXDEFSTR);
     nextmode = gzgeti();
-    changemap(mapname); // continue below once map has been loaded and client & server have updated 
+    changemap(mapname); // continue below once map has been loaded and client & server have updated
     return;
-    out:    
+    out:
     conoutf("aborting: savegame/demo from a different version of cube or cpu architecture");
     stop();
 };
@@ -110,18 +110,18 @@ void loadgameout()
 void loadgamerest()
 {
     if(demoplayback || !f) return;
-        
+
     if(gzgeti()!=ents.length()) return loadgameout();
     loopv(ents)
     {
-        ents[i].spawned = gzgetc(f)!=0;   
+        ents[i].spawned = gzgetc(f)!=0;
         if(ents[i].type==CARROT && !ents[i].spawned) trigger(ents[i].attr1, ents[i].attr2, true);
     };
     restoreserverstate(ents);
-    
+
     gzread(f, player1, sizeof(dynent));
     player1->lastaction = lastmillis;
-    
+
     int nmonsters = gzgeti();
     dvector &monsters = getmonsters();
     if(nmonsters!=monsters.length()) return loadgameout();
@@ -133,15 +133,15 @@ void loadgamerest()
         if(monsters[i]->state==CS_DEAD) monsters[i]->lastaction = 0;
     };
     restoremonsterstate();
-    
+
     int nplayers = gzgeti();
     loopi(nplayers) if(!gzget())
     {
         dynent *d = getclient(i);
         assert(d);
-        gzread(f, d, sizeof(dynent));        
+        gzread(f, d, sizeof(dynent));
     };
-    
+
     conoutf("savegame restored");
     if(demoloading) startdemo(); else stop();
 };
@@ -215,7 +215,7 @@ VAR(demoplaybackspeed, 10, 100, 1000);
 int scaletime(int t) { return (int)(t*(100.0f/demoplaybackspeed))+starttime; };
 
 void readdemotime()
-{   
+{
     if(gzeof(f) || (playbacktime = gzgeti())==-1)
     {
         stopreset();
@@ -259,7 +259,7 @@ void catmulrom(vec &z, vec &a, vec &b, vec &c, float s, vec &dest)		// spline in
 
 void fixwrap(dynent *a, dynent *b)
 {
-	while(b->yaw-a->yaw>180)  a->yaw += 360;  
+	while(b->yaw-a->yaw>180)  a->yaw += 360;
 	while(b->yaw-a->yaw<-180) a->yaw -= 360;
 };
 
@@ -277,10 +277,10 @@ void demoplaybackstep()
         uchar buf[MAXTRANS];
         gzread(f, buf, len);
         localservertoclient(buf, len);  // update game state
-        
+
         dynent *target = players[democlientnum];
-        assert(target); 
-        
+        assert(target);
+
 		int extras;
         if(extras = gzget())     // read additional client side state not present in normal network stream
         {
@@ -298,7 +298,7 @@ void demoplaybackstep()
 			if(ddamage = gzgeti()) { gzgetv(dorig); particle_splash(3, ddamage, 1000, dorig); };
             // FIXME: set more client state here
         };
-        
+
         // insert latest copy of player into history
         if(extras && (playerhistory.empty() || playerhistory.last()->lastupdate!=playbacktime))
         {
@@ -312,10 +312,10 @@ void demoplaybackstep()
                 playerhistory.remove(0);
             };
         };
-        
+
         readdemotime();
     };
-    
+
     if(demoplayback)
     {
         int itime = lastmillis-demodelaymsec;

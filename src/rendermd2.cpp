@@ -39,7 +39,7 @@ struct md2
     vec **mverts;
     int displaylist;
     int displaylistverts;
-    
+
     mapmodelinfo mmi;
     char *loadname;
     int mdlnum;
@@ -99,7 +99,7 @@ bool md2::load(char* filename)
     numVerts     = header.numVertices;
 
     fclose(file);
-    
+
     mverts = new vec*[numFrames];
     loopj(numFrames) mverts[j] = NULL;
 
@@ -126,12 +126,12 @@ void md2::scale(int frame, float scale, int sn)
 void md2::render(vec &light, int frame, int range, float x, float y, float z, float yaw, float pitch, float sc, float speed, int snap, int basetime)
 {
     loopi(range) if(!mverts[frame+i]) scale(frame+i, sc, snap);
-    
+
     glPushMatrix ();
     glTranslatef(x, y, z);
     glRotatef(yaw+180, 0, -1, 0);
     glRotatef(pitch, 0, 0, 1);
-    
+
 	glColor3fv((float *)&light);
 
     if(displaylist && frame==0 && range==1)
@@ -196,7 +196,7 @@ vector<md2 *> mapmodels;
 const int FIRSTMDL = 20;
 
 void delayedload(md2 *m)
-{ 
+{
     if(!m->loaded)
     {
         sprintf_sd(name1)("packages/models/%s/tris.md2", m->loadname);
@@ -217,7 +217,7 @@ md2 *loadmodel(char *name)
     if(mm) return *mm;
     md2 *m = new md2();
     m->mdlnum = modelnum++;
-    mapmodelinfo mmi = { 2, 2, 0, 0, "" }; 
+    mapmodelinfo mmi = { 2, 2, 0, 0, "" };
     m->mmi = mmi;
     m->loadname = newstring(name);
     mdllookup->access(m->loadname, &m);
@@ -227,7 +227,7 @@ md2 *loadmodel(char *name)
 void mapmodel(char *rad, char *h, char *zoff, char *snap, char *name)
 {
 	md2 *m = loadmodel(name);
-    mapmodelinfo mmi = { atoi(rad), atoi(h), atoi(zoff), atoi(snap), m->loadname }; 
+    mapmodelinfo mmi = { atoi(rad), atoi(h), atoi(zoff), atoi(snap), m->loadname };
     m->mmi = mmi;
     mapmodels.add(m);
 };
@@ -241,29 +241,29 @@ COMMAND(mapmodelreset, ARG_NONE);
 
 void rendermodel(char *mdl, int frame, int range, int tex, float rad, float x, float y, float z, float yaw, float pitch, bool teammate, float scale, float speed, int snap, int basetime)
 {
-    md2 *m = loadmodel(mdl); 
-    
+    md2 *m = loadmodel(mdl);
+
     if(isoccluded(player1->o.x, player1->o.y, x-rad, z-rad, rad*2)) return;
 
     delayedload(m);
-    
+
     int xs, ys;
     glBindTexture(GL_TEXTURE_2D, tex ? lookuptexture(tex, xs, ys) : FIRSTMDL+m->mdlnum);
-    
+
     int ix = (int)x;
     int iy = (int)z;
-    vec light = { 1.0f, 1.0f, 1.0f }; 
-    
+    vec light = { 1.0f, 1.0f, 1.0f };
+
     if(!OUTBORD(ix, iy))
     {
-         sqr *s = S(ix,iy);  
+         sqr *s = S(ix,iy);
          float ll = 256.0f; // 0.96f;
-         float of = 0.0f; // 0.1f;      
+         float of = 0.0f; // 0.1f;
          light.x = s->r/ll+of;
          light.y = s->g/ll+of;
          light.z = s->b/ll+of;
     };
-    
+
     if(teammate)
     {
         light.x *= 0.6f;

@@ -8,7 +8,7 @@ void backup(char *name, char *backupname)
     rename(name, backupname);
 };
 
-string cgzname, bakname, pcfname, mcfname; 
+string cgzname, bakname, pcfname, mcfname;
 
 void setnames(char *name)
 {
@@ -100,7 +100,7 @@ void toptimize() // FIXME: only does 2x2, make atleast for 4x4 also
     };
 };
 
-// these two are used by getmap/sendmap.. transfers compressed maps directly 
+// these two are used by getmap/sendmap.. transfers compressed maps directly
 
 void writemap(char *mname, int msize, uchar *mdata)
 {
@@ -142,9 +142,9 @@ void save_world(char *mname)
     endianswap(&tmp.version, sizeof(int), 4);
     endianswap(&tmp.waterlevel, sizeof(int), 16);
     gzwrite(f, &tmp, sizeof(header));
-    loopv(ents) 
+    loopv(ents)
     {
-        if(ents[i].type!=NOTUSED) 
+        if(ents[i].type!=NOTUSED)
         {
             entity tmp = ents[i];
             endianswap(&tmp, sizeof(short), 4);
@@ -251,7 +251,7 @@ void load_world(char *mname)        // still supports all map formats that have 
         int type = gzgetc(f);
         switch(type)
         {
-            case 255:  
+            case 255:
             {
                 int n = gzgetc(f);
                 for(int i = 0; i<n; i++, k++) memcpy(&world[k], t, sizeof(sqr));

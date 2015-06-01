@@ -38,7 +38,7 @@ int nquads;
 const float TEXTURESCALE = 32.0f;
 bool floorstrip = false, deltastrip = false;
 int oh, oy, ox, ogltex;                         // the o* vars are used by the stripification
-int ol3r, ol3g, ol3b, ol4r, ol4g, ol4b;      
+int ol3r, ol3g, ol3b, ol4r, ol4g, ol4b;
 int firstindex;
 bool showm = false;
 
@@ -99,7 +99,7 @@ void render_flat(int wtex, int x, int y, int size, int h, sqr *l1, sqr *l2, sqr 
         int lighterr = lighterror*2;
         if((abs(ol3r-l3->r)<lighterr && abs(ol4r-l4->r)<lighterr        // skip vertices if light values are close enough
         &&  abs(ol3g-l3->g)<lighterr && abs(ol4g-l4->g)<lighterr
-        &&  abs(ol3b-l3->b)<lighterr && abs(ol4b-l4->b)<lighterr) || !wtex)   
+        &&  abs(ol3b-l3->b)<lighterr && abs(ol4b-l4->b)<lighterr) || !wtex)
         {
             curvert -= 2;
             nquads--;
@@ -107,10 +107,10 @@ void render_flat(int wtex, int x, int y, int size, int h, sqr *l1, sqr *l2, sqr 
         else
         {
             uchar *p3 = (uchar *)(&verts[curvert-1].r);
-            ol3r = p3[0];  
-            ol3g = p3[1];  
+            ol3r = p3[0];
+            ol3g = p3[1];
             ol3b = p3[2];
-            uchar *p4 = (uchar *)(&verts[curvert-2].r);  
+            uchar *p4 = (uchar *)(&verts[curvert-2].r);
             ol4r = p4[0];
             ol4g = p4[1];
             ol4b = p4[2];
@@ -120,12 +120,12 @@ void render_flat(int wtex, int x, int y, int size, int h, sqr *l1, sqr *l2, sqr 
     if(isceil)
     {
         vert(x+size, h, y+size, l3, xo+xs, yo+ys);
-        vert(x,      h, y+size, l4, xo,    yo+ys); 
+        vert(x,      h, y+size, l4, xo,    yo+ys);
     }
     else
     {
         vert(x,      h, y+size, l4, xo,    yo+ys);
-        vert(x+size, h, y+size, l3, xo+xs, yo+ys); 
+        vert(x+size, h, y+size, l3, xo+xs, yo+ys);
     };
 
     oy = y;
@@ -146,9 +146,9 @@ void render_flatdelta(int wtex, int x, int y, int size, float h1, float h2, floa
     float xo = xf*x;
     float yo = yf*y;
 
-    bool first = !deltastrip || y!=oy+size || ogltex!=gltex || x!=ox; 
+    bool first = !deltastrip || y!=oy+size || ogltex!=gltex || x!=ox;
 
-    if(first) 
+    if(first)
     {
         stripend();
         firstindex = curvert;
@@ -175,13 +175,13 @@ void render_flatdelta(int wtex, int x, int y, int size, float h1, float h2, floa
 
     if(isceil)
     {
-        vertf((float)x+size, h3, (float)y+size, l3, xo+xs, yo+ys); 
+        vertf((float)x+size, h3, (float)y+size, l3, xo+xs, yo+ys);
         vertf((float)x,      h4, (float)y+size, l4, xo,    yo+ys);
     }
     else
     {
         vertf((float)x,      h4, (float)y+size, l4, xo,    yo+ys);
-        vertf((float)x+size, h3, (float)y+size, l3, xo+xs, yo+ys); 
+        vertf((float)x+size, h3, (float)y+size, l3, xo+xs, yo+ys);
     };
 
     oy = y;
@@ -245,16 +245,16 @@ void render_square(int wtex, float floor1, float floor2, float ceil1, float ceil
     if(!flip)
     {
         vertf((float)x2, ceil2,  (float)y2, l2, xo+xs, -yf*ceil2);
-        vertf((float)x1, ceil1,  (float)y1, l1, xo,    -yf*ceil1); 
-        vertf((float)x2, floor2, (float)y2, l2, xo+xs, -floor2*yf); 
-        vertf((float)x1, floor1, (float)y1, l1, xo,    -floor1*yf); 
+        vertf((float)x1, ceil1,  (float)y1, l1, xo,    -yf*ceil1);
+        vertf((float)x2, floor2, (float)y2, l2, xo+xs, -floor2*yf);
+        vertf((float)x1, floor1, (float)y1, l1, xo,    -floor1*yf);
     }
     else
     {
         vertf((float)x1, ceil1,  (float)y1, l1, xo,    -yf*ceil1);
-        vertf((float)x2, ceil2,  (float)y2, l2, xo+xs, -yf*ceil2); 
-        vertf((float)x1, floor1, (float)y1, l1, xo,    -floor1*yf); 
-        vertf((float)x2, floor2, (float)y2, l2, xo+xs, -floor2*yf); 
+        vertf((float)x2, ceil2,  (float)y2, l2, xo+xs, -yf*ceil2);
+        vertf((float)x1, floor1, (float)y1, l1, xo,    -floor1*yf);
+        vertf((float)x2, floor2, (float)y2, l2, xo+xs, -floor2*yf);
     };
 
     nquads++;
@@ -284,7 +284,7 @@ int renderwater(float hf)
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_SRC_COLOR);
     int sx, sy;
-    glBindTexture(GL_TEXTURE_2D, lookuptexture(DEFAULT_LIQUID, sx, sy));  
+    glBindTexture(GL_TEXTURE_2D, lookuptexture(DEFAULT_LIQUID, sx, sy));
 
     wx1 &= ~(watersubdiv-1);
     wy1 &= ~(watersubdiv-1);
@@ -295,10 +295,10 @@ int renderwater(float hf)
     float ys = watersubdiv*yf;
     float t1 = lastmillis/300.0f;
     float t2 = lastmillis/4000.0f;
-    
+
     sqr dl;
     dl.r = dl.g = dl.b = 255;
-    
+
     for(int xx = wx1; xx<wx2; xx += watersubdiv)
     {
         for(int yy = wy1; yy<wy2; yy += watersubdiv)
@@ -311,17 +311,17 @@ int renderwater(float hf)
                 vertw(xx+watersubdiv, hf, yy,             &dl, dx(xo+xs), dy(yo), t1);
             };
             vertw(xx,             hf, yy+watersubdiv, &dl, dx(xo),    dy(yo+ys), t1);
-            vertw(xx+watersubdiv, hf, yy+watersubdiv, &dl, dx(xo+xs), dy(yo+ys), t1); 
-        };   
+            vertw(xx+watersubdiv, hf, yy+watersubdiv, &dl, dx(xo+xs), dy(yo+ys), t1);
+        };
         int n = (wy2-wy1-1)/watersubdiv;
         nquads += n;
         n = (n+2)*2;
         glDrawArrays(GL_TRIANGLE_STRIP, curvert -= n, n);
     };
-    
+
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
-    
+
     return nquads;
 };
 

@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 
     initclient();
     initserver(dedicated, uprate, sdesc, ip, master, passwd, maxcl);  // never returns if dedicated
-      
+
     log("world");
     empty_world(7);
 
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
     log("localconnect");
     localconnect();
     changemap("metl3");		// if this map is changed, also change depthcorrect()
-    
+
     log("mainloop");
     int ignore = 5;
     for(;;)
@@ -211,8 +211,8 @@ int main(int argc, char **argv)
                     quit();
                     break;
 
-                case SDL_KEYDOWN: 
-                case SDL_KEYUP: 
+                case SDL_KEYDOWN:
+                case SDL_KEYUP:
                     keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, event.key.keysym.unicode);
                     break;
 

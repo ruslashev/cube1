@@ -9,15 +9,15 @@ bool plcollide(dynent *d, dynent *o, float &headspace, float &hi, float &lo) // 
 {
     if(o->state!=CS_ALIVE) return true;
     const float r = o->radius+d->radius;
-    if(fabs(o->o.x-d->o.x)<r && fabs(o->o.y-d->o.y)<r) 
+    if(fabs(o->o.x-d->o.x)<r && fabs(o->o.y-d->o.y)<r)
     {
         if(d->o.z-d->eyeheight<o->o.z-o->eyeheight) { if(o->o.z-o->eyeheight<hi) hi = o->o.z-o->eyeheight-1; }
         else if(o->o.z+o->aboveeye>lo) lo = o->o.z+o->aboveeye+1;
-    
+
         if(fabs(o->o.z-d->o.z)<o->aboveeye+d->eyeheight) return false;
         if(d->monsterstate) return false; // hack
         headspace = d->o.z-o->o.z-o->aboveeye-d->eyeheight;
-        if(headspace<0) headspace = 10;        
+        if(headspace<0) headspace = 10;
     };
     return true;
 };
@@ -50,7 +50,7 @@ void mmcollide(dynent *d, float &hi, float &lo)           // collide with a mapm
         if(!&mmi || !mmi.h) continue;
         const float r = mmi.rad+d->radius;
         if(fabs(e.x-d->o.x)<r && fabs(e.y-d->o.y)<r)
-        { 
+        {
             float mmz = (float)(S(e.x, e.y)->floor+mmi.zoff+e.attr3);
             if(d->o.z-d->eyeheight<mmz) { if(mmz<hi) hi = mmz; }
             else if(mmz+mmi.h>lo) lo = mmz+mmi.h;
@@ -107,7 +107,7 @@ bool collide(dynent *d, bool spawn, float drop, float rise)
         };
         if(ceil<hi) hi = ceil;
         if(floor>lo) lo = floor;
-        if(floor<minfloor) return false;   
+        if(floor<minfloor) return false;
     };
 
     if(hi-lo < d->eyeheight+d->aboveeye) return false;
@@ -115,7 +115,7 @@ bool collide(dynent *d, bool spawn, float drop, float rise)
     float headspace = 10;
     loopv(players)       // collide with other players
     {
-        dynent *o = players[i]; 
+        dynent *o = players[i];
         if(!o || o==d) continue;
         if(!plcollide(d, o, headspace, hi, lo)) return false;
     };
@@ -123,9 +123,9 @@ bool collide(dynent *d, bool spawn, float drop, float rise)
     dvector &v = getmonsters();
     // this loop can be a performance bottleneck with many monster on a slow cpu,
     // should replace with a blockmap but seems mostly fast enough
-    loopv(v) if(!vreject(d->o, v[i]->o, 7.0f) && d!=v[i] && !plcollide(d, v[i], headspace, hi, lo)) return false; 
+    loopv(v) if(!vreject(d->o, v[i]->o, 7.0f) && d!=v[i] && !plcollide(d, v[i], headspace, hi, lo)) return false;
     headspace -= 0.01f;
-    
+
     mmcollide(d, hi, lo);    // collide with map models
 
     if(spawn)
@@ -208,8 +208,8 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
     const float speed = curtime/(water ? 2000.0f : 1000.0f)*pl->maxspeed;
     const float friction = water ? 20.0f : (pl->onfloor ? 6.0f : 30.0f);
 
-    const float fpsfric = friction/curtime*20.0f;   
-    
+    const float fpsfric = friction/curtime*20.0f;
+
     vmul(pl->vel, fpsfric-1);   // slowly apply friction and direction to velocity, gives a smooth movement
     vadd(pl->vel, d);
     vdiv(pl->vel, fpsfric);
@@ -255,21 +255,21 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
 		pl->o.x += f*d.x;
 		pl->o.y += f*d.y;
 		pl->o.z += f*d.z;
-		if(collide(pl, false, drop, rise)) continue;                     
+		if(collide(pl, false, drop, rise)) continue;
 		// player stuck, try slide along y axis
 		pl->blocked = true;
 		pl->o.x -= f*d.x;
-		if(collide(pl, false, drop, rise)) { d.x = 0; continue; };   
+		if(collide(pl, false, drop, rise)) { d.x = 0; continue; };
 		pl->o.x += f*d.x;
 		// still stuck, try x axis
 		pl->o.y -= f*d.y;
-		if(collide(pl, false, drop, rise)) { d.y = 0; continue; };       
+		if(collide(pl, false, drop, rise)) { d.y = 0; continue; };
 		pl->o.y += f*d.y;
 		// try just dropping down
 		pl->moving = false;
 		pl->o.x -= f*d.x;
 		pl->o.y -= f*d.y;
-		if(collide(pl, false, drop, rise)) { d.y = d.x = 0; continue; }; 
+		if(collide(pl, false, drop, rise)) { d.y = d.x = 0; continue; };
 		pl->o.z -= f*d.z;
 		break;
 	};
@@ -287,10 +287,10 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
            || pl->o.z < s->floor - (s->type==FHF ? s->vdelta/4 : 0)
            || pl->o.z > s->ceil  + (s->type==CHF ? s->vdelta/4 : 0);
     };
-    
+
     // automatically apply smooth roll when strafing
 
-    if(pl->strafe==0) 
+    if(pl->strafe==0)
     {
         pl->roll = pl->roll/(1+(float)sqrt((float)curtime)/25);
     }
@@ -300,9 +300,9 @@ void moveplayer(dynent *pl, int moveres, bool local, int curtime)
         if(pl->roll>maxroll) pl->roll = (float)maxroll;
         if(pl->roll<-maxroll) pl->roll = (float)-maxroll;
     };
-    
+
     // play sounds on water transitions
-    
+
     if(!pl->inwater && water) { playsound(S_SPLASH2, &pl->o); pl->vel.z = 0; }
     else if(pl->inwater && !water) playsound(S_SPLASH1, &pl->o);
     pl->inwater = water;

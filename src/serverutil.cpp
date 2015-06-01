@@ -16,7 +16,7 @@ int getint(uchar *&p)
     int c = *((char *)p);
     p++;
     if(c==-128) { int n = *p++; n |= *((char *)p)<<8; p++; return n;}
-    else if(c==-127) { int n = *p++; n |= *p++<<8; n |= *p++<<16; return n|(*p++<<24); } 
+    else if(c==-127) { int n = *p++; n |= *p++<<8; n |= *p++<<16; return n|(*p++<<24); }
     else return c;
 };
 
@@ -32,11 +32,11 @@ const char *modenames[] =
     "instagib", "instagib team", "efficiency", "efficiency team",
     "insta arena", "insta clan arena", "tactics arena", "tactics clan arena",
 };
-      
+
 const char *modestr(int n) { return (n>=-2 && n<12) ? modenames[n+2] : "unknown"; };
 
 char msgsizesl[] =               // size inclusive message token, 0 for variable or not-checked sizes
-{ 
+{
     SV_INITS2C, 4, SV_INITC2S, 0, SV_POS, 12, SV_TEXT, 0, SV_SOUND, 2, SV_CDIS, 2,
     SV_EDITH, 7, SV_EDITT, 7, SV_EDITS, 6, SV_EDITD, 6, SV_EDITE, 6,
     SV_DIED, 2, SV_DAMAGE, 4, SV_SHOT, 8, SV_FRAGS, 2,
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
 {
     int uprate = 0, maxcl = 4;
     char *sdesc = "", *ip = "", *master = NULL, *passwd = "";
-    
+
     for(int i = 1; i<argc; i++)
     {
         char *a = &argv[i][2];
@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
             default: printf("WARNING: unknown commandline option\n");
         };
     };
-    
+
     if(enet_initialize()<0) fatal("Unable to initialise network module");
     initserver(true, uprate, sdesc, ip, master, passwd, maxcl);
     return 0;

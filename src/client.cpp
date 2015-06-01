@@ -75,9 +75,9 @@ void connects(char *servername)
 
 void disconnect(int onlyclean, int async)
 {
-    if(clienthost) 
+    if(clienthost)
     {
-        if(!connecting && !disconnecting) 
+        if(!connecting && !disconnecting)
         {
             enet_peer_disconnect(clienthost->peers);
             enet_host_flush(clienthost);
@@ -100,7 +100,7 @@ void disconnect(int onlyclean, int async)
     c2sinit = false;
     player1->lifesequence = 0;
     loopv(players) zapdynent(players[i]);
-    
+
     localdisconnect();
 
     if(!onlyclean) { stop(); localconnect(); };
@@ -113,7 +113,7 @@ void trydisconnect()
         conoutf("not connected");
         return;
     };
-    if(connecting) 
+    if(connecting)
     {
         conoutf("aborting connection attempt");
         disconnect();
@@ -146,9 +146,9 @@ void addmsg(int rel, int num, int type, ...)
     msg.add(rel);
     msg.add(type);
     va_list marker;
-    va_start(marker, type); 
+    va_start(marker, type);
     loopi(num-1) msg.add(va_arg(marker, int));
-    va_end(marker);  
+    va_end(marker);
 };
 
 void server_err()

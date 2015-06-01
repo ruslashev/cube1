@@ -2,7 +2,7 @@
 
 #include "cube.h"
 
-bool editmode = false; 
+bool editmode = false;
 
 // the current selection, used by almost all editing commands
 // invariant: all code assumes that these are kept inside MINBORD distance of the edge of the map

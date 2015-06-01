@@ -11,15 +11,15 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
     float lx = light.x+(rnd(21)-10)*0.1f;
     float ly = light.y+(rnd(21)-10)*0.1f;
     float dx = bx-lx;
-    float dy = by-ly; 
+    float dy = by-ly;
     float dist = (float)sqrt(dx*dx+dy*dy);
     if(dist<1.0f) return;
     int reach = light.attr1;
     int steps = (int)(reach*reach*1.6f/dist); // can change this for speedup/quality?
     const int PRECBITS = 12;
     const float PRECF = 4096.0f;
-    int x = (int)(lx*PRECF); 
-    int y = (int)(ly*PRECF); 
+    int x = (int)(lx*PRECF);
+    int y = (int)(ly*PRECF);
     int l = light.attr2<<PRECBITS;
     int stepx = (int)(dx/(float)steps*PRECF);
     int stepy = (int)(dy/(float)steps*PRECF);
@@ -29,10 +29,10 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
     {
         l /= lightscale;
         stepl /= lightscale;
-        
+
         if(light.attr3 || light.attr4)      // coloured light version, special case because most lights are white
         {
-            int dimness = rnd((255-(light.attr2+light.attr3+light.attr4)/3)/16+1);  
+            int dimness = rnd((255-(light.attr2+light.attr3+light.attr4)/3)/16+1);
             x += stepx*dimness;
             y += stepy*dimness;
 
@@ -48,7 +48,7 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
             stepb /= lightscale;
             loopi(steps)
             {
-                sqr *s = S(x>>PRECBITS, y>>PRECBITS); 
+                sqr *s = S(x>>PRECBITS, y>>PRECBITS);
                 int tl = (l>>PRECBITS)+s->r;
                 s->r = tl>255 ? 255 : tl;
                 tl = (g>>PRECBITS)+s->g;
@@ -68,7 +68,7 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
         }
         else        // white light, special optimized version
         {
-            int dimness = rnd((255-light.attr2)/16+1);  
+            int dimness = rnd((255-light.attr2)/16+1);
             x += stepx*dimness;
             y += stepy*dimness;
 
@@ -76,9 +76,9 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
 
             loopi(steps)
             {
-                sqr *s = S(x>>PRECBITS, y>>PRECBITS); 
+                sqr *s = S(x>>PRECBITS, y>>PRECBITS);
                 int tl = (l>>PRECBITS)+s->r;
-                s->r = s->g = s->b = tl>255 ? 255 : tl;       
+                s->r = s->g = s->b = tl>255 ? 255 : tl;
                 if(SOLID(s)) return;
                 x += stepx;
                 y += stepy;
@@ -91,7 +91,7 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
     {
         loopi(steps)
         {
-            sqr *s = S(x>>PRECBITS, y>>PRECBITS); 
+            sqr *s = S(x>>PRECBITS, y>>PRECBITS);
             int light = l>>PRECBITS;
             if(light>s->r) s->r = s->g = s->b = (uchar)light;
             if(SOLID(s)) return;
@@ -100,7 +100,7 @@ void lightray(float bx, float by, persistent_entity &light)     // done in realt
             l -= stepl;
         };
     };
-    
+
 };
 
 void calclightsource(persistent_entity &l)
@@ -110,14 +110,14 @@ void calclightsource(persistent_entity &l)
     int ex = l.x+reach;
     int sy = l.y-reach;
     int ey = l.y+reach;
-    
+
     rndreset();
-    
+
     const float s = 0.8f;
 
     for(float sx2 = (float)sx; sx2<=ex; sx2+=s*2) { lightray(sx2, (float)sy, l); lightray(sx2, (float)ey, l); };
     for(float sy2 = sy+s; sy2<=ey-s; sy2+=s*2)    { lightray((float)sx, sy2, l); lightray((float)ex, sy2, l); };
-    
+
     rndtime();
 };
 
@@ -151,7 +151,7 @@ void calclight()
         entity &e = ents[i];
         if(e.type==LIGHT) calclightsource(e);
     };
-    
+
     block b = { 1, 1, ssize-2, ssize-2 };
     postlightarea(b);
     setvar("fullbright", 0);
@@ -167,7 +167,7 @@ void cleardlights()
     {
         block *backup = dlights.pop();
         blockpaste(*backup);
-        free(backup);    
+        free(backup);
     };
 };
 
@@ -177,11 +177,11 @@ void dodynlight(vec &vold, vec &v, int reach, int strength, dynent *owner)
     if(owner->monsterstate) reach = reach/2;
     if(!reach) return;
     if(v.x<0 || v.y<0 || v.x>ssize || v.y>ssize) return;
-    
+
     int creach = reach+16;  // dependant on lightray random offsets!
     block b = { (int)v.x-creach, (int)v.y-creach, creach*2+1, creach*2+1 };
 
-    if(b.x<1) b.x = 1;   
+    if(b.x<1) b.x = 1;
     if(b.y<1) b.y = 1;
     if(b.xs+b.x>ssize-2) b.xs = ssize-2-b.x;
     if(b.ys+b.y>ssize-2) b.ys = ssize-2-b.y;

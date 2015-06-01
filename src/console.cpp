@@ -76,7 +76,7 @@ void renderconsole()                                // render buffer taking into
 // keymap is defined externally in keymap.cfg
 
 struct keym { int code; char *name; char *action; } keyms[256];
-int numkm = 0;                                     
+int numkm = 0;
 
 void keymap(char *code, char *key, char *action)
 {
@@ -95,7 +95,7 @@ void bindkey(char *key, char *action)
         strcpy_s(keyms[i].action, action);
         return;
     };
-    conoutf("unknown key \"%s\"", key);   
+    conoutf("unknown key \"%s\"", key);
 };
 
 COMMANDN(bind, bindkey, ARG_2STR);
@@ -121,7 +121,7 @@ COMMAND(mapmsg, ARG_1STR);
 void pasteconsole()
 {
     #ifdef WIN32
-    if(!IsClipboardFormatAvailable(CF_TEXT)) return; 
+    if(!IsClipboardFormatAvailable(CF_TEXT)) return;
     if(!OpenClipboard(NULL)) return;
     char *cb = (char *)GlobalLock(GetClipboardData(CF_TEXT));
     strcat_s(commandbuf, cb);
@@ -129,7 +129,7 @@ void pasteconsole()
     CloseClipboard();
     #else
     SDL_SysWMinfo wminfo;
-    SDL_VERSION(&wminfo.version); 
+    SDL_VERSION(&wminfo.version);
     wminfo.subsystem = SDL_SYSWM_X11;
     if(!SDL_GetWMInfo(&wminfo)) return;
     int cbsize;
@@ -185,15 +185,15 @@ void keypress(int code, bool isdown, int cooked)
                     resetcomplete();
                     break;
                 };
-                    
+
                 case SDLK_UP:
                     if(histpos) strcpy_s(commandbuf, vhistory[--histpos]);
                     break;
-                
+
                 case SDLK_DOWN:
                     if(histpos<vhistory.length()) strcpy_s(commandbuf, vhistory[histpos++]);
                     break;
-                    
+
                 case SDLK_TAB:
                     complete(commandbuf);
                     break;
@@ -234,7 +234,7 @@ void keypress(int code, bool isdown, int cooked)
         {
             string temp;
             strcpy_s(temp, keyms[i].action);
-            execute(temp, isdown); 
+            execute(temp, isdown);
             return;
         };
     };

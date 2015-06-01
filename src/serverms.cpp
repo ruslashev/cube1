@@ -22,7 +22,7 @@ void httpgetsend(ENetAddress &ad, char *hostname, char *req, char *ref, char *ag
     buf.dataLength = strlen((char *)buf.data);
     printf("sending request to %s...\n", hostname);
     enet_socket_send(mssock, NULL, &buf, 1);
-};  
+};
 
 void httpgetrecieve(ENetBuffer &buf)
 {
@@ -41,7 +41,7 @@ void httpgetrecieve(ENetBuffer &buf)
         ((char*)buf.data)[0] = 0;
         buf.dataLength -= len;
     };
-};  
+};
 
 uchar *stripheader(uchar *b)
 {
@@ -68,14 +68,14 @@ void updatemasterserver(int seconds)
 		masterb.dataLength = MAXTRANS-1;
         updmaster = seconds+60*60;
     };
-}; 
+};
 
 void checkmasterreply()
 {
     bool busy = mssock!=ENET_SOCKET_NULL;
     httpgetrecieve(masterb);
     if(busy && mssock==ENET_SOCKET_NULL) printf("masterserver reply: %s\n", stripheader(masterrep));
-}; 
+};
 
 uchar *retrieveservers(uchar *buf, int buflen)
 {
@@ -92,7 +92,7 @@ uchar *retrieveservers(uchar *buf, int buflen)
 ENetSocket pongsock = ENET_SOCKET_NULL;
 string serverdesc;
 
-void serverms(int mode, int numplayers, int minremain, char *smapname, int seconds, bool isfull)        
+void serverms(int mode, int numplayers, int minremain, char *smapname, int seconds, bool isfull)
 {
     checkmasterreply();
     updatemasterserver(seconds);
@@ -122,7 +122,7 @@ void serverms(int mode, int numplayers, int minremain, char *smapname, int secon
         buf.dataLength = p - pong;
         enet_socket_send(pongsock, &addr, &buf, 1);
     };
-};      
+};
 
 void servermsinit(const char *master, char *sdesc, bool listen)
 {

@@ -75,7 +75,7 @@ void spawnmonster()     // spawn a random monster according to freq distribution
 
 void monsterclear()     // called after map start to spawn all monsters to initial state
 {
-    loopv(monsters) gp()->dealloc(monsters[i], sizeof(dynent)); 
+    loopv(monsters) gp()->dealloc(monsters[i], sizeof(dynent));
     monsters.setsize(0);
     numkilled = 0;
     monstertotal = 0;
@@ -90,7 +90,7 @@ void monsterclear()     // called after map start to spawn all monsters to initi
         mtimestart = lastmillis;
         loopv(ents) if(ents[i].type==MONSTER)
         {
-            dynent *m = basicmonster(ents[i].attr2, ents[i].attr1, M_SLEEP, 100, 0);  
+            dynent *m = basicmonster(ents[i].attr2, ents[i].attr1, M_SLEEP, 100, 0);
             m->o.x = ents[i].x;
             m->o.y = ents[i].y;
             m->o.z = ents[i].z;
@@ -104,7 +104,7 @@ bool los(float lx, float ly, float lz, float bx, float by, float bz, vec &v) // 
 {
     if(OUTBORD((int)lx, (int)ly) || OUTBORD((int)bx, (int)by)) return false;
     float dx = bx-lx;
-    float dy = by-ly; 
+    float dy = by-ly;
     int steps = (int)(sqrt(dx*dx+dy*dy)/0.9);
     if(!steps) return false;
     float x = lx;
@@ -171,8 +171,8 @@ void monsteraction(dynent *m)           // main AI thinking routine, called ever
         if(m->targetyaw>m->yaw) m->yaw = m->targetyaw;
     };
 
-    vdist(disttoenemy, vectoenemy, m->o, m->enemy->o);                         
-    m->pitch = atan2(m->enemy->o.z-m->o.z, disttoenemy)*180/PI;         
+    vdist(disttoenemy, vectoenemy, m->o, m->enemy->o);
+    m->pitch = atan2(m->enemy->o.z-m->o.z, disttoenemy)*180/PI;
 
     if(m->blocked)                                                              // special case: if we run into scenery
     {
@@ -187,9 +187,9 @@ void monsteraction(dynent *m)           // main AI thinking routine, called ever
             transition(m, M_SEARCH, 1, 400, 1000);
         };
     };
-    
+
     float enemyyaw = -(float)atan2(m->enemy->o.x - m->o.x, m->enemy->o.y - m->o.y)/PI*180+180;
-    
+
     switch(m->monsterstate)
     {
         case M_PAIN:
@@ -197,7 +197,7 @@ void monsteraction(dynent *m)           // main AI thinking routine, called ever
         case M_SEARCH:
             if(m->trigger<lastmillis) transition(m, M_HOME, 1, 100, 200);
             break;
-            
+
         case M_SLEEP:                       // state classic sp monster start in, wait for visual contact
         {
             vec target;
@@ -215,7 +215,7 @@ void monsteraction(dynent *m)           // main AI thinking routine, called ever
             };
             break;
         };
-        
+
         case M_AIMING:                      // this state is the delay between wanting to shoot and actually firing
             if(m->trigger<lastmillis)
             {
@@ -238,7 +238,7 @@ void monsteraction(dynent *m)           // main AI thinking routine, called ever
                 else  // the closer the monster is the more likely he wants to shoot
                 {
                     if(!rnd((int)disttoenemy/3+1) && m->enemy->state==CS_ALIVE)         // get ready to fire
-                    { 
+                    {
                         m->attacktarget = target;
                         transition(m, M_AIMING, 0, monstertypes[m->mtype].lag, 10);
                     }
@@ -303,9 +303,9 @@ void monsterthink()
         nextmonster = lastmillis+1000;
         spawnmonster();
     };
-    
+
     if(monstertotal && !spawnremain && numkilled==monstertotal) endsp(true);
-    
+
     loopv(ents)             // equivalent of player entity touch, but only teleports are used
     {
         entity &e = ents[i];
@@ -328,7 +328,7 @@ void monsterthink()
             if(dist<4) teleport((int)(&e-&ents[0]), monsters[i]);
         };
     };
-    
+
     loopv(monsters) if(monsters[i]->state==CS_ALIVE) monsteraction(monsters[i]);
 };
 

@@ -1,7 +1,7 @@
 // server.cpp: little more than enhanced multicaster
 // runs dedicated or as client coroutine
 
-#include "cube.h" 
+#include "cube.h"
 
 enum { ST_EMPTY, ST_LOCAL, ST_TCPIP };
 
@@ -37,7 +37,7 @@ void restoreserverstate(vector<entity> &ents)   // hack: called from savegame co
     {
         sents[i].spawned = ents[i].spawned;
         sents[i].spawnsecs = 0;
-    }; 
+    };
 };
 
 int interm = 0, minremain = 0, mapend = 0;
@@ -131,7 +131,7 @@ bool vote(char *map, int reqmode, int sender)
 {
     strcpy_s(clients[sender].mapvote, map);
     clients[sender].modevote = reqmode;
-    int yes = 0, no = 0; 
+    int yes = 0, no = 0;
     loopv(clients) if(clients[i].type!=ST_EMPTY)
     {
         if(clients[i].mapvote[0]) { if(strcmp(clients[i].mapvote, map)==0 && clients[i].modevote==reqmode) yes++; else no++; }
@@ -143,7 +143,7 @@ bool vote(char *map, int reqmode, int sender)
     if(yes/(float)(yes+no) <= 0.5f) return false;
     sendservmsg("vote passed");
     resetvotes();
-    return true;    
+    return true;
 };
 
 // server side processing of updates: does very little and most state is tracked client only
@@ -156,7 +156,7 @@ void process(ENetPacket * packet, int sender)   // sender may be -1
         disconnect_client(sender, "packet length");
         return;
     };
-        
+
     uchar *end = packet->data+packet->dataLength;
     uchar *p = packet->data+2;
     char text[MAXTRANS];
@@ -191,7 +191,7 @@ void process(ENetPacket * packet, int sender)   // sender may be -1
             sender = -1;
             break;
         };
-        
+
         case SV_ITEMLIST:
         {
             int n;
@@ -241,8 +241,8 @@ void process(ENetPacket * packet, int sender)   // sender may be -1
         case SV_RECVMAP:
 			send(sender, recvmap(sender));
             return;
-            
-        case SV_EXT:   // allows for new features that require no server updates 
+
+        case SV_EXT:   // allows for new features that require no server updates
         {
             for(int n = getint(p); n; n--) getint(p);
             break;
@@ -346,9 +346,9 @@ void serverslice(int seconds, unsigned int timeout)   // main server update, cal
             send2(true, -1, SV_ITEMSPAWN, i);
         };
     };
-    
+
     lastsec = seconds;
-    
+
     if((mode>1 || (mode==0 && nonlocalclients)) && seconds>mapend-minremain*60) checkintermission();
     if(interm && seconds>interm)
     {
@@ -362,7 +362,7 @@ void serverslice(int seconds, unsigned int timeout)   // main server update, cal
     };
 
     resetserverifempty();
-    
+
     if(!isdedicated) return;     // below is network only
 
 	int numplayers = 0;
@@ -373,7 +373,7 @@ void serverslice(int seconds, unsigned int timeout)   // main server update, cal
     {
         nonlocalclients = 0;
         loopv(clients) if(clients[i].type==ST_TCPIP) nonlocalclients++;
-        laststatus = seconds;     
+        laststatus = seconds;
         if(nonlocalclients || bsend || brec) printf("status: %d remote clients, %.1f send, %.1f rec (K/sec)\n", nonlocalclients, bsend/60.0f/1024, brec/60.0f/1024);
         bsend = brec = 0;
     };
@@ -397,11 +397,11 @@ void serverslice(int seconds, unsigned int timeout)   // main server update, cal
             }
             case ENET_EVENT_TYPE_RECEIVE:
                 brec += event.packet->dataLength;
-                process(event.packet, (int)event.peer->data); 
+                process(event.packet, (int)event.peer->data);
                 if(event.packet->referenceCount==0) enet_packet_destroy(event.packet);
                 break;
 
-            case ENET_EVENT_TYPE_DISCONNECT: 
+            case ENET_EVENT_TYPE_DISCONNECT:
                 if((int)event.peer->data<0) break;
                 printf("disconnected client (%s)\n", clients[(int)event.peer->data].hostname);
                 clients[(int)event.peer->data].type = ST_EMPTY;
@@ -409,8 +409,8 @@ void serverslice(int seconds, unsigned int timeout)   // main server update, cal
                 event.peer->data = (void *)-1;
                 break;
         };
-        
-        if(numplayers>maxclients)   
+
+        if(numplayers>maxclients)
         {
             disconnect_client(lastconnect, "maxclients reached");
         };
@@ -435,7 +435,7 @@ void localconnect()
     client &c = addclient();
     c.type = ST_LOCAL;
     strcpy_s(c.hostname, "local");
-    send_welcome(&c-&clients[0]); 
+    send_welcome(&c-&clients[0]);
 };
 
 void initserver(bool dedicated, int uprate, char *sdesc, char *ip, char *master, char *passwd, int maxcl)
@@ -443,7 +443,7 @@ void initserver(bool dedicated, int uprate, char *sdesc, char *ip, char *master,
     serverpassword = passwd;
     maxclients = maxcl;
 	servermsinit(master ? master : "wouter.fov120.com/cube/masterserver/", sdesc, dedicated);
-    
+
     if(isdedicated = dedicated)
     {
         ENetAddress address = { ENET_HOST_ANY, CUBE_SERVER_PORT };

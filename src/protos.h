@@ -1,4 +1,4 @@
-// protos for ALL external functions in cube... 
+// protos for ALL external functions in cube...
 
 // command
 extern int variable(char *name, int min, int cur, int max, int *storage, void (*fun)(), bool persist);
@@ -75,7 +75,7 @@ extern void changemapserv(char *name, int mode);
 extern void writeclientinfo(FILE *f);
 
 // clientgame
-extern void mousemove(int dx, int dy); 
+extern void mousemove(int dx, int dy);
 extern void updateworld(int millis);
 extern void startmap(char *name);
 extern void changemap(char *name);

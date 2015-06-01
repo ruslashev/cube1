@@ -59,13 +59,13 @@ void createrays(vec &from, vec &to)             // create random spread of rays 
         #define RNDD (rnd(101)-50)*f
         vec r = { RNDD, RNDD, RNDD };
         sg[i] = to;
-        vadd(sg[i], r); 
+        vadd(sg[i], r);
     };
 };
 
 bool intersect(dynent *d, vec &from, vec &to)   // if lineseg hits entity bounding box
 {
-    vec v = to, w = d->o, *p; 
+    vec v = to, w = d->o, *p;
     vsub(v, from);
     vsub(w, from);
     float c1 = dotprod(w, v);
@@ -98,7 +98,7 @@ char *playerincrosshair()
     loopv(players)
     {
         dynent *o = players[i];
-        if(!o) continue; 
+        if(!o) continue;
         if(intersect(o, player1->o, worldpos)) return o->name;
     };
     return NULL;
@@ -144,7 +144,7 @@ void radialeffect(dynent *o, vec &v, int cn, int qdam, dynent *at)
     if(o->state!=CS_ALIVE) return;
     vdist(dist, temp, v, o->o);
     dist -= 2; // account for eye distance imprecision
-    if(dist<RL_DAMRAD) 
+    if(dist<RL_DAMRAD)
     {
         if(dist<0) dist = 0;
         int damage = (int)(qdam*(1-(dist/RL_DAMRAD)));
@@ -174,7 +174,7 @@ void splash(projectile *p, vec &v, vec &vold, int notthisplayer, int notthismons
         {
             if(i==notthisplayer) continue;
             dynent *o = players[i];
-            if(!o) continue; 
+            if(!o) continue;
             radialeffect(o, v, i, qdam, p->owner);
         };
         dvector &mv = getmonsters();
@@ -189,7 +189,7 @@ inline void projdamage(dynent *o, projectile *p, vec &v, int i, int im, int qdam
     {
         splash(p, v, p->o, i, im, qdam);
         hit(i, qdam, o, p->owner);
-    }; 
+    };
 };
 
 void moveprojectiles(float time)
@@ -210,7 +210,7 @@ void moveprojectiles(float time)
             loopv(players)
             {
                 dynent *o = players[i];
-                if(!o) continue; 
+                if(!o) continue;
                 projdamage(o, p, v, i, -1, qdam);
             };
             if(p->owner!=player1) projdamage(player1, p, v, -1, -1, qdam);
@@ -224,7 +224,7 @@ void moveprojectiles(float time)
             {
                 if(p->gun==GUN_RL) { dodynlight(p->o, v, 0, 255, p->owner); particle_splash(5, 2, 200, v); }
                 else { particle_splash(1, 1, 200, v); particle_splash(guns[p->gun].part, 1, 1, v); };
-            };       
+            };
         };
         p->o = v;
     };
@@ -259,7 +259,7 @@ void shootv(int gun, vec &from, vec &to, dynent *d, bool local)     // create vi
             newprojectile(from, to, (float)pspeed, local, d, gun);
             break;
 
-        case GUN_RIFLE: 
+        case GUN_RIFLE:
             particle_splash(0, 50, 200, to);
             particle_trail(1, 500, from, to);
             break;
@@ -302,21 +302,21 @@ void shoot(dynent *d, vec &targ)
     vec from = d->o;
     vec to = targ;
     from.z -= 0.2f;    // below eye
-    
+
     vdist(dist, unitv, from, to);
     vdiv(unitv, dist);
     vec kickback = unitv;
     vmul(kickback, guns[d->gunselect].kickamount*-0.01f);
     vadd(d->vel, kickback);
     if(d->pitch<80.0f) d->pitch += guns[d->gunselect].kickamount*0.05f;
-    
 
-    if(d->gunselect==GUN_FIST || d->gunselect==GUN_BITE) 
+
+    if(d->gunselect==GUN_FIST || d->gunselect==GUN_BITE)
     {
         vmul(unitv, 3); // punch range
         to = from;
         vadd(to, unitv);
-    };   
+    };
     if(d->gunselect==GUN_SG) createrays(from, to);
 
     if(d->quadmillis && attacktime>200) playsoundc(S_ITEMPUP);
@@ -325,11 +325,11 @@ void shoot(dynent *d, vec &targ)
     d->gunwait = guns[d->gunselect].attackdelay;
 
     if(guns[d->gunselect].projspeed) return;
-    
+
     loopv(players)
     {
         dynent *o = players[i];
-        if(!o) continue; 
+        if(!o) continue;
         raydamage(o, from, to, d, i);
     };
 

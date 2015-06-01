@@ -76,7 +76,7 @@ void resolverstop(resolverthread &rt, bool restart)
     rt.thread = NULL;
     if(restart) rt.thread = SDL_CreateThread(resolverloop, &rt);
     SDL_UnlockMutex(resolvermutex);
-}; 
+};
 
 void resolverclear()
 {
@@ -116,14 +116,14 @@ bool resolvercheck(char **name, ENetAddress *address)
         resolverthread &rt = resolverthreads[i];
         if(rt.query)
         {
-            if(lastmillis - rt.starttime > resolverlimit)        
+            if(lastmillis - rt.starttime > resolverlimit)
             {
                 resolverstop(rt, true);
                 *name = rt.query;
                 SDL_UnlockMutex(resolvermutex);
                 return true;
             };
-        };    
+        };
     };
     SDL_UnlockMutex(resolvermutex);
     return false;
@@ -179,7 +179,7 @@ void pingservers()
     };
     lastinfo = lastmillis;
 };
-  
+
 void checkresolver()
 {
     char *name = NULL;
@@ -207,11 +207,11 @@ void checkpings()
     ENetAddress addr;
     uchar ping[MAXTRANS], *p;
     char text[MAXTRANS];
-    buf.data = ping; 
+    buf.data = ping;
     buf.dataLength = sizeof(ping);
     while(enet_socket_wait(pingsock, &events, 0) >= 0 && events)
     {
-        if(enet_socket_receive(pingsock, &addr, &buf, 1) <= 0) return;  
+        if(enet_socket_receive(pingsock, &addr, &buf, 1) <= 0) return;
         loopv(servers)
         {
             serverinfo &si = servers[i];
@@ -227,7 +227,7 @@ void checkpings()
                 sgetstr();
                 strcpy_s(si.map, text);
                 sgetstr();
-                strcpy_s(si.sdesc, text);                
+                strcpy_s(si.sdesc, text);
                 break;
             };
         };

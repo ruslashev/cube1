@@ -53,7 +53,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
 {
     if(ENET_NET_TO_HOST_16(*(ushort *)buf)!=len) neterr("packet length");
     incomingdemodata(buf, len);
-    
+
     uchar *end = buf+len;
     uchar *p = buf+2;
     char text[MAXTRANS];
@@ -106,7 +106,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             d->vel.z = getint(p)/DVF;
             int f = getint(p);
             d->strafe = (f&3)==3 ? -1 : f&3;
-            f >>= 2; 
+            f >>= 2;
             d->move = (f&3)==3 ? -1 : f&3;
             d->onfloor = (f>>2)&1;
             int state = f>>3;
@@ -122,15 +122,15 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
 
         case SV_TEXT:
             sgetstr();
-            conoutf("%s:\f %s", d->name, text); 
+            conoutf("%s:\f %s", d->name, text);
             break;
 
-        case SV_MAPCHANGE:     
+        case SV_MAPCHANGE:
             sgetstr();
             changemapserv(text, getint(p));
             mapchanged = true;
             break;
-        
+
         case SV_ITEMLIST:
         {
             int n;
@@ -158,9 +158,9 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             }
             else                    // new client
             {
-                c2sinit = false;    // send new players my info again 
+                c2sinit = false;    // send new players my info again
                 conoutf("connected: %s", text);
-            }; 
+            };
             strcpy_s(d->name, text);
             sgetstr();
             strcpy_s(d->team, text);
@@ -171,7 +171,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
         case SV_CDIS:
             cn = getint(p);
             if(!(d = getclient(cn))) break;
-			conoutf("player %s disconnected", d->name[0] ? d->name : "[incompatible client]"); 
+			conoutf("player %s disconnected", d->name[0] ? d->name : "[incompatible client]");
             zapdynent(players[cn]);
             break;
 
@@ -190,7 +190,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             break;
         };
 
-        case SV_DAMAGE:             
+        case SV_DAMAGE:
         {
             int target = getint(p);
             int damage = getint(p);
@@ -257,7 +257,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             setspawn(i, true);
             if(i>=(uint)ents.length()) break;
             vec v = { ents[i].x, ents[i].y, ents[i].z };
-            playsound(S_ITEMSPAWN, &v); 
+            playsound(S_ITEMSPAWN, &v);
             break;
         };
 
@@ -269,7 +269,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             getint(p);
             break;
 
-        case SV_PONG: 
+        case SV_PONG:
             addmsg(0, 2, SV_CLIENTPING, player1->ping = (player1->ping*5+lastmillis-getint(p))/6);
             break;
 
@@ -295,7 +295,7 @@ void localservertoclient(uchar *buf, int len)   // processes any updates from th
             changemapserv(text, gamemode);
             break;
         };
-        
+
         case SV_SERVMSG:
             sgetstr();
             conoutf("%s", text);

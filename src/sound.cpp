@@ -159,7 +159,7 @@ void updatechanvol(int chan, vec *loc)
         FSOUND_SetVolume(chan, vol);
         FSOUND_SetPan(chan, pan);
     #endif
-};  
+};
 
 void newsoundloc(int chan, vec *loc)
 {

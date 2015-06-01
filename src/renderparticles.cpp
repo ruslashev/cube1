@@ -36,7 +36,7 @@ void newparticle(vec &o, vec &d, int fade, int type)
 };
 
 VAR(demotracking, 0, 0, 1);
-VARP(particlesize, 20, 100, 500); 
+VARP(particlesize, 20, 100, 500);
 
 vec right, up;
 
@@ -54,31 +54,31 @@ void render_particles(int time)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
     glDisable(GL_FOG);
-    
+
     struct parttype { float r, g, b; int gr, tex; float sz; } parttypes[] =
     {
-        { 0.7f, 0.6f, 0.3f, 2,  3, 0.06f }, // yellow: sparks 
+        { 0.7f, 0.6f, 0.3f, 2,  3, 0.06f }, // yellow: sparks
         { 0.5f, 0.5f, 0.5f, 20, 7, 0.15f }, // grey:   small smoke
         { 0.2f, 0.2f, 1.0f, 20, 3, 0.08f }, // blue:   edit mode entities
         { 1.0f, 0.1f, 0.1f, 1,  7, 0.06f }, // red:    blood spats
         { 1.0f, 0.8f, 0.8f, 20, 6, 1.2f  }, // yellow: fireball1
-        { 0.5f, 0.5f, 0.5f, 20, 7, 0.6f  }, // grey:   big smoke   
+        { 0.5f, 0.5f, 0.5f, 20, 7, 0.6f  }, // grey:   big smoke
         { 1.0f, 1.0f, 1.0f, 20, 8, 1.2f  }, // blue:   fireball2
         { 1.0f, 1.0f, 1.0f, 20, 9, 1.2f  }, // green:  fireball3
         { 1.0f, 0.1f, 0.1f, 0,  7, 0.2f  }, // red:    demotrack
     };
-    
+
     int numrender = 0;
-    
+
     for(particle *p, **pp = &parlist; p = *pp;)
-    {       
+    {
         parttype *pt = &parttypes[p->type];
 
-        glBindTexture(GL_TEXTURE_2D, pt->tex);  
+        glBindTexture(GL_TEXTURE_2D, pt->tex);
         glBegin(GL_QUADS);
-        
+
         glColor3d(pt->r, pt->g, pt->b);
-        float sz = pt->sz*particlesize/100.0f; 
+        float sz = pt->sz*particlesize/100.0f;
         // perf varray?
         glTexCoord2f(0.0, 1.0); glVertex3d(p->o.x+(-right.x+up.x)*sz, p->o.z+(-right.y+up.y)*sz, p->o.y+(-right.z+up.z)*sz);
         glTexCoord2f(1.0, 1.0); glVertex3d(p->o.x+( right.x+up.x)*sz, p->o.z+( right.y+up.y)*sz, p->o.y+( right.z+up.z)*sz);
