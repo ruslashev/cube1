@@ -147,7 +147,7 @@ void md2::render(vec &light, int frame, int range, float x, float y, float z, fl
 			glNewList(displaylist = displaylistn++, GL_COMPILE);
 			displaylistverts = xtraverts;
 		};
-		
+
 		int time = lastmillis-basetime;
 		int fr1 = (int)(time/speed);
 		float frac1 = (time-fr1*speed)/speed;
@@ -180,7 +180,7 @@ void md2::render(vec &light, int frame, int range, float x, float y, float z, fl
 
 			glEnd();
 		};
-		
+
 		if(displaylist)
 		{
 			glEndList();
