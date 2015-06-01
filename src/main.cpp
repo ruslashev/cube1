@@ -28,6 +28,7 @@ void quit()                     // normal exit
     writeservercfg();
     cleanup(NULL);
 };
+COMMAND(quit, ARG_NONE);
 
 void fatal(char *s, char *o)    // failure exit
 {
@@ -69,9 +70,7 @@ void screenshot()
         SDL_FreeSurface(image);
     };
 };
-
 COMMAND(screenshot, ARG_NONE);
-COMMAND(quit, ARG_NONE);
 
 void keyrepeat(bool on)
 {
