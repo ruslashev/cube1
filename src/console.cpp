@@ -102,8 +102,8 @@ COMMANDN(bind, bindkey, ARG_2STR);
 
 void saycommand(char *init)                         // turns input to the command line on or off
 {
-	SDL_EnableUNICODE(saycommandon = (init!=NULL));
-	keyrepeat(saycommandon);
+	// SDL_EnableUNICODE(saycommandon = (init!=NULL));
+	// keyrepeat(saycommandon);
 	if(!init) init = "";
 	strcpy_s(commandbuf, init);
 };
@@ -113,6 +113,7 @@ void mapmsg(char *s) { strn0cpy(hdr.maptitle, s, 128); };
 COMMAND(saycommand, ARG_VARI);
 COMMAND(mapmsg, ARG_1STR);
 
+#if 0
 #ifndef WIN32
 #include <X11/Xlib.h>
 #include <SDL_syswm.h>
@@ -150,6 +151,7 @@ void pasteconsole()
 	XFree(cb);
 #endif
 };
+#endif
 
 cvector vhistory;
 int histpos = 0;
@@ -198,8 +200,10 @@ void keypress(int code, bool isdown, int cooked)
 					complete(commandbuf);
 					break;
 
+#if 0
 				case SDLK_v:
 					if(SDL_GetModState()&(KMOD_LCTRL|KMOD_RCTRL)) { pasteconsole(); return; };
+#endif
 
 				default:
 					resetcomplete();

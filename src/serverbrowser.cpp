@@ -1,13 +1,14 @@
 // serverbrowser.cpp: eihrul's concurrent resolver, and server browser window management
 
 #include "cube.h"
-#include "SDL_thread.h"
+#include <SDL2/SDL_thread.h>
 
 struct resolverthread
 {
 	SDL_Thread *thread;
 	char *query;
 	int starttime;
+	bool should_die;
 };
 
 struct resolverresult
@@ -26,12 +27,15 @@ int resolverlimit = 1000;
 int resolverloop(void * data)
 {
 	resolverthread *rt = (resolverthread *)data;
+	if (rt->should_die)
+		return 0;
 	for(;;)
 	{
+		if (rt->should_die)
+			break;
 		SDL_SemWait(resolversem);
 		SDL_LockMutex(resolvermutex);
-		if(resolverqueries.empty())
-		{
+		if (resolverqueries.empty()) {
 			SDL_UnlockMutex(resolvermutex);
 			continue;
 		}
@@ -62,7 +66,8 @@ void resolverinit(int threads, int limit)
 		resolverthread &rt = resolverthreads.add();
 		rt.query = NULL;
 		rt.starttime = 0;
-		rt.thread = SDL_CreateThread(resolverloop, &rt);
+		rt.should_die = false;
+		rt.thread = SDL_CreateThread(resolverloop, NULL, &rt);
 		--threads;
 	};
 };
@@ -70,11 +75,12 @@ void resolverinit(int threads, int limit)
 void resolverstop(resolverthread &rt, bool restart)
 {
 	SDL_LockMutex(resolvermutex);
-	SDL_KillThread(rt.thread);
 	rt.query = NULL;
 	rt.starttime = 0;
+	rt.starttime = 0;
 	rt.thread = NULL;
-	if(restart) rt.thread = SDL_CreateThread(resolverloop, &rt);
+	if (restart)
+		rt.thread = SDL_CreateThread(resolverloop, NULL, &rt);
 	SDL_UnlockMutex(resolvermutex);
 };
 

@@ -232,10 +232,13 @@ void addstrip(int tex, int start, int n)
 	s.num = n;
 };
 
+extern SDL_Window *window;
 VARFP(gamma, 30, 100, 300,
 		{
-		float f = gamma/100.0f;
-		if(SDL_SetGamma(f,f,f)==-1)
+		const float f = gamma/100.0f;
+		Uint16 ramp[256];
+		SDL_CalculateGammaRamp(f, ramp);
+		if(SDL_SetWindowGammaRamp(window, ramp, ramp, ramp)==-1)
 		{
 		conoutf("Could not set gamma (card/driver doesn't support it?)");
 		conoutf("sdl: %s", SDL_GetError());

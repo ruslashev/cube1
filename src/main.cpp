@@ -2,6 +2,9 @@
 
 #include "cube.h"
 
+SDL_Window *window = NULL; // temporary and nasty cleanup workaround
+SDL_GLContext glcontext = NULL;
+
 void cleanup(char *msg)         // single program exit point;
 {
 	stop();
@@ -11,14 +14,17 @@ void cleanup(char *msg)         // single program exit point;
 	cleansound();
 	cleanupserver();
 	SDL_ShowCursor(1);
-	if(msg)
-	{
+	if (msg) {
 #ifdef WIN32
 		MessageBox(NULL, msg, "cube fatal error", MB_OK|MB_SYSTEMMODAL);
 #else
 		printf(msg);
 #endif
 	};
+	if (window)
+		SDL_DestroyWindow(window);
+	if (glcontext)
+		SDL_GL_DeleteContext(glcontext);
 	SDL_Quit();
 	exit(1);
 };
@@ -47,6 +53,7 @@ void *alloc(int s)              // for some big chunks... most other allocs use 
 int scr_w = 640;
 int scr_h = 480;
 
+#if 0
 void screenshot()
 {
 	SDL_Surface *image;
@@ -71,12 +78,7 @@ void screenshot()
 	};
 };
 COMMAND(screenshot, ARG_NONE);
-
-void keyrepeat(bool on)
-{
-	SDL_EnableKeyRepeat(on ? SDL_DEFAULT_REPEAT_DELAY : 0,
-			SDL_DEFAULT_REPEAT_INTERVAL);
-};
+#endif
 
 VARF(gamespeed, 10, 100, 1000, if(multiplayer()) gamespeed = 100);
 VARP(minmillis, 0, 5, 1000);
@@ -86,21 +88,21 @@ int framesinmap = 0;
 
 int main(int argc, char **argv)
 {
-	bool dedicated = false;
-	int fs = SDL_FULLSCREEN, uprate = 0, maxcl = 4;
+	bool dedicated = false, fullscreen = true;
+	int uprate = 0, maxcl = 4;
 	char *sdesc = "", *ip = "", *master = NULL, *passwd = "";
 	islittleendian = *((char *)&islittleendian);
 
 #define log(s) conoutf("init: %s", s)
 	log("sdl");
 
-	for(int i = 1; i<argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		char *a = &argv[i][2];
-		if(argv[i][0]=='-') switch(argv[i][1])
+		if (argv[i][0]=='-') switch(argv[i][1])
 		{
-			case 'd': dedicated = true; break;
-			case 't': fs     = 0; break;
+			case 'd': dedicated  = true;  break;
+			case 't': fullscreen = false; break;
 			case 'w': scr_w  = atoi(a); break;
 			case 'h': scr_h  = atoi(a); break;
 			case 'u': uprate = atoi(a); break;
@@ -112,12 +114,14 @@ int main(int argc, char **argv)
 			default:  conoutf("unknown commandline option");
 		}
 		else conoutf("unknown commandline argument");
-	};
+	}
 
-	if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO)<0) fatal("Unable to initialize SDL");
+	if (SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO) < 0)
+		fatal("Unable to initialize SDL");
 
 	log("net");
-	if(enet_initialize()<0) fatal("Unable to initialize network module");
+	if (enet_initialize() < 0)
+		fatal("Unable to initialize network module");
 
 	initclient();
 	initserver(dedicated, uprate, sdesc, ip, master, passwd, maxcl);  // never returns if dedicated
@@ -126,16 +130,27 @@ int main(int argc, char **argv)
 	empty_world(7);
 
 	log("video: sdl");
-	if(SDL_InitSubSystem(SDL_INIT_VIDEO)<0) fatal("Unable to initialize SDL Video");
+	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+		fatal("Unable to initialize SDL Video");
 
-	log("video: mode");
+	log("video: creating window");
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	if(SDL_SetVideoMode(scr_w, scr_h, 0, SDL_OPENGL|fs)==NULL) fatal("Unable to create OpenGL screen");
+	window = SDL_CreateWindow("cube engine",
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			scr_w, scr_h,
+			SDL_WINDOW_OPENGL | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+	if (window == NULL)
+		fatal("Unable to create OpenGL screen");
+
+	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+	if (glcontext == NULL)
+		fatal("Unable to create OpenGL context");
 
 	log("video: misc");
-	SDL_WM_SetCaption("cube engine", NULL);
+#if 0
 	SDL_WM_GrabInput(SDL_GRAB_ON);
-	keyrepeat(false);
+#endif
 	SDL_ShowCursor(0);
 
 	log("gl");
@@ -187,7 +202,7 @@ int main(int argc, char **argv)
 		fps = (1000.0f/curtime+fps*50)/51;
 		computeraytable(player1->o.x, player1->o.y);
 		readdepth(scr_w, scr_h);
-		SDL_GL_SwapBuffers();
+		SDL_GL_SwapWindow(window);
 		extern void updatevol(); updatevol();
 		if(framesinmap++<5)	// cheap hack to get rid of initial sparklies, even when triple buffering etc.
 		{
@@ -208,7 +223,7 @@ int main(int argc, char **argv)
 
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
-					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, event.key.keysym.unicode);
+					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, 0);
 					break;
 
 				case SDL_MOUSEMOTION:
