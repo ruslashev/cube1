@@ -87,7 +87,7 @@ int framesinmap = 0;
 int main(int argc, char **argv)
 {
 	bool dedicated = false;
-	int fs = SDL_FULLSCREEN, par = 0, uprate = 0, maxcl = 4;
+	int fs = SDL_FULLSCREEN, uprate = 0, maxcl = 4;
 	char *sdesc = "", *ip = "", *master = NULL, *passwd = "";
 	islittleendian = *((char *)&islittleendian);
 
@@ -114,15 +114,10 @@ int main(int argc, char **argv)
 		else conoutf("unknown commandline argument");
 	};
 
-#ifdef _DEBUG
-	par = SDL_INIT_NOPARACHUTE;
-	fs = 0;
-#endif
-
-	if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|par)<0) fatal("Unable to initialize SDL");
+	if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO)<0) fatal("Unable to initialize SDL");
 
 	log("net");
-	if(enet_initialize()<0) fatal("Unable to initialise network module");
+	if(enet_initialize()<0) fatal("Unable to initialize network module");
 
 	initclient();
 	initserver(dedicated, uprate, sdesc, ip, master, passwd, maxcl);  // never returns if dedicated
@@ -166,11 +161,12 @@ int main(int argc, char **argv)
 	newmenu("ping\tplr\tserver");
 	exec("data/keymap.cfg");
 	exec("data/menus.cfg");
-	exec("data/prefabs.cfg");
 	exec("data/sounds.cfg");
 	exec("servers.cfg");
-	if(!execfile("config.cfg")) execfile("data/defaults.cfg");
-	exec("autoexec.cfg");
+	if (!execfile("config.cfg")) {
+		execfile("data/default.cfg");
+		writecfg();
+	}
 
 	log("localconnect");
 	localconnect();
