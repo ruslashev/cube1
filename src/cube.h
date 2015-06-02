@@ -274,7 +274,7 @@ enum    // function signatures for script functions, see command.cpp
 #include <GL/glu.h>
 #include <GL/glext.h>
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include <SDL_image.h>
 
 #include <enet/enet.h>
