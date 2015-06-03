@@ -148,9 +148,7 @@ int main(int argc, char **argv)
 		fatal("Unable to create OpenGL context");
 
 	log("video: misc");
-#if 0
-	SDL_WM_GrabInput(SDL_GRAB_ON);
-#endif
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_ShowCursor(0);
 
 	log("gl");
@@ -189,8 +187,12 @@ int main(int argc, char **argv)
 
 	log("mainloop");
 	int ignore = 5;
+	int delay = 200;
 	for(;;)
 	{
+		delay--;
+		if (delay <= 0)
+			break;
 		int millis = SDL_GetTicks()*gamespeed/100;
 		if(millis-lastmillis>200) lastmillis = millis-200;
 		else if(millis-lastmillis<1) lastmillis = millis-1;
@@ -223,6 +225,9 @@ int main(int argc, char **argv)
 
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
+					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, 0);
+					break;
+				case SDL_TEXTINPUT:
 					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, 0);
 					break;
 
