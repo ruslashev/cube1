@@ -187,7 +187,7 @@ int main(int argc, char **argv)
 
 	log("mainloop");
 	int ignore = 5;
-	int delay = 200;
+	int delay = 500;
 	for(;;)
 	{
 		delay--;
@@ -225,10 +225,10 @@ int main(int argc, char **argv)
 
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
-					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, 0);
+					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED);
 					break;
 				case SDL_TEXTINPUT:
-					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, 0);
+					textinput(event.text.text);
 					break;
 
 				case SDL_MOUSEMOTION:
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
 				case SDL_MOUSEBUTTONDOWN:
 				case SDL_MOUSEBUTTONUP:
 					if(lasttype==event.type && lastbut==event.button.button) break; // why?? get event twice without it
-					keypress(-event.button.button, event.button.state!=0, 0);
+					keypress(-event.button.button, event.button.state!=0);
 					lasttype = event.type;
 					lastbut = event.button.button;
 					break;

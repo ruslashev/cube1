@@ -78,14 +78,14 @@ void renderconsole()                                // render buffer taking into
 struct keym { int code; char *name; char *action; } keyms[256];
 int numkm = 0;
 
-void keymap(char *code, char *key, char *action)
+void keymap(char *code, char *key)
 {
 	keyms[numkm].code = atoi(code);
 	keyms[numkm].name = newstring(key);
-	keyms[numkm++].action = newstringbuf(action);
+	keyms[numkm++].action = newstringbuf("");
 };
 
-COMMAND(keymap, ARG_3STR);
+COMMAND(keymap, ARG_2STR);
 
 void bindkey(char *key, char *action)
 {
@@ -169,7 +169,13 @@ void history(int n)
 
 COMMAND(history, ARG_1INT);
 
-void keypress(int code, bool isdown, int cooked)
+void textinput(char text[32])
+{
+	resetcomplete();
+	strcat_s(commandbuf, text);
+}
+
+void keypress(int code, bool isdown)
 {
 	if(saycommandon)                                // keystrokes go to commandline
 	{
@@ -204,10 +210,7 @@ void keypress(int code, bool isdown, int cooked)
 				case SDLK_v:
 					if(SDL_GetModState()&(KMOD_LCTRL|KMOD_RCTRL)) { pasteconsole(); return; };
 #endif
-
-				default:
-					resetcomplete();
-					if(cooked) { char add[] = { cooked, 0 }; strcat_s(commandbuf, add); };
+				default: break; // idk
 			};
 		}
 		else
