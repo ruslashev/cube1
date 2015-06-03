@@ -164,7 +164,8 @@ int main(int argc, char **argv)
 			!installtex(9,  path(newstring("data/martin/ball3.png")), xs, ys) ||
 			!installtex(4,  path(newstring("data/explosion.jpg")), xs, ys) ||
 			!installtex(5,  path(newstring("data/items.png")), xs, ys) ||
-			!installtex(1,  path(newstring("data/crosshair.png")), xs, ys)) fatal("could not find core textures (hint: run cube from the parent of the bin directory)");
+			!installtex(1,  path(newstring("data/crosshair.png")), xs, ys))
+		fatal("could not find core textures (hint: run cube from the parent of the bin directory)");
 
 	log("sound");
 	initsound();
@@ -206,7 +207,7 @@ int main(int argc, char **argv)
 		readdepth(scr_w, scr_h);
 		SDL_GL_SwapWindow(window);
 		extern void updatevol(); updatevol();
-		if(framesinmap++<5)	// cheap hack to get rid of initial sparklies, even when triple buffering etc.
+		if (framesinmap++ < 5)	// cheap hack to get rid of initial sparklies, even when triple buffering etc.
 		{
 			player1->yaw += 5;
 			gl_drawframe(scr_w, scr_h, fps);
@@ -215,9 +216,9 @@ int main(int argc, char **argv)
 		gl_drawframe(scr_w, scr_h, fps);
 		SDL_Event event;
 		int lasttype = 0, lastbut = 0;
-		while(SDL_PollEvent(&event))
+		while (SDL_PollEvent(&event))
 		{
-			switch(event.type)
+			switch (event.type)
 			{
 				case SDL_QUIT:
 					quit();
@@ -225,10 +226,11 @@ int main(int argc, char **argv)
 
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
-					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED);
+					// printf("KEYPRESS sym %d state %d\n", event.key.keysym.sym, event.key.state==SDL_PRESSED);
+					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, false, 0);
 					break;
 				case SDL_TEXTINPUT:
-					textinput(event.text.text);
+					keypress(0, false, true, event.text.text);
 					break;
 
 				case SDL_MOUSEMOTION:
@@ -239,7 +241,7 @@ int main(int argc, char **argv)
 				case SDL_MOUSEBUTTONDOWN:
 				case SDL_MOUSEBUTTONUP:
 					if(lasttype==event.type && lastbut==event.button.button) break; // why?? get event twice without it
-					keypress(-event.button.button, event.button.state!=0);
+					keypress(-event.button.button, event.button.state != 0, false, 0);
 					lasttype = event.type;
 					lastbut = event.button.button;
 					break;

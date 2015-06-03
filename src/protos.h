@@ -16,8 +16,7 @@ extern char *getalias(char *name);
 extern void writecfg();
 
 // console
-extern void textinput(char text[32]);
-extern void keypress(int code, bool isdown);
+extern void keypress(int code, bool isdown, bool textinput, char text[32]);
 extern void renderconsole();
 extern void conoutf(const char *s, ...);
 extern char *getcurcommand();

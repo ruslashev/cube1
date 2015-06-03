@@ -102,8 +102,6 @@ COMMANDN(bind, bindkey, ARG_2STR);
 
 void saycommand(char *init)                         // turns input to the command line on or off
 {
-	// SDL_EnableUNICODE(saycommandon = (init!=NULL));
-	// keyrepeat(saycommandon);
 	if(!init) init = "";
 	strcpy_s(commandbuf, init);
 };
@@ -169,14 +167,17 @@ void history(int n)
 
 COMMAND(history, ARG_1INT);
 
-void textinput(char text[32])
+void keypress(int code, bool isdown, bool textinput, char text[32])
 {
-	resetcomplete();
-	strcat_s(commandbuf, text);
-}
+	if (textinput && saycommandon)
+	{
+		resetcomplete();
+		printf("textinput %c\n", text[0]);
+		char buf[] = { text[0], 0 }; // please forgive me, encoding gods
+		strcat_s(commandbuf, buf);
+		return;
+	}
 
-void keypress(int code, bool isdown)
-{
 	if(saycommandon)                                // keystrokes go to commandline
 	{
 		if(isdown)
@@ -187,9 +188,10 @@ void keypress(int code, bool isdown)
 					break;
 
 				case SDLK_BACKSPACE:
-				case SDLK_LEFT:
 					{
-						for(int i = 0; commandbuf[i]; i++) if(!commandbuf[i+1]) commandbuf[i] = 0;
+						for(int i = 0; commandbuf[i]; i++)
+							if(!commandbuf[i+1])
+								commandbuf[i] = 0;
 						resetcomplete();
 						break;
 					};
@@ -212,10 +214,8 @@ void keypress(int code, bool isdown)
 #endif
 				default: break; // idk
 			};
-		}
-		else
-		{
-			if(code==SDLK_RETURN)
+		} else {
+			if (code == SDLK_RETURN)
 			{
 				if(commandbuf[0])
 				{
