@@ -224,13 +224,14 @@ int main(int argc, char **argv)
 					quit();
 					break;
 
+				case SDL_TEXTINPUT:
+					keypress(0, false, true, event.text.text);
+					break;
+
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
 					// printf("KEYPRESS sym %d state %d\n", event.key.keysym.sym, event.key.state==SDL_PRESSED);
 					keypress(event.key.keysym.sym, event.key.state==SDL_PRESSED, false, 0);
-					break;
-				case SDL_TEXTINPUT:
-					keypress(0, false, true, event.text.text);
 					break;
 
 				case SDL_MOUSEMOTION:

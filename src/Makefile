@@ -1,5 +1,5 @@
 CXX=g++
-CXXOPTFLAGS=-Wall -O3 -fsigned-char -fomit-frame-pointer -fpermissive -w -Wno-Write-strings -Wno-Unused-variable
+CXXOPTFLAGS=-Wall -fsigned-char -fomit-frame-pointer -fpermissive -w -Wno-Write-strings -Wno-Unused-variable -g
 CXXFLAGS=$(CXXOPTFLAGS) `sdl2-config --cflags`
 
 CLIENT_LIBS=-lenet `sdl2-config --libs` -lSDL2_image -lSDL_mixer -lz -lGL -lGLU -lX11

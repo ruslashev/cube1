@@ -100,9 +100,17 @@ void bindkey(char *key, char *action)
 
 COMMANDN(bind, bindkey, ARG_2STR);
 
+bool dont_query_next_key = false;
+
 void saycommand(char *init)                         // turns input to the command line on or off
 {
-	if(!init) init = "";
+	if (init != NULL) {
+		dont_query_next_key = true;
+		saycommandon = true;
+	} else {
+		saycommandon = false;
+		init = "";
+	}
 	strcpy_s(commandbuf, init);
 };
 
@@ -171,14 +179,17 @@ void keypress(int code, bool isdown, bool textinput, char text[32])
 {
 	if (textinput && saycommandon)
 	{
-		resetcomplete();
-		printf("textinput %c\n", text[0]);
-		char buf[] = { text[0], 0 }; // please forgive me, encoding gods
-		strcat_s(commandbuf, buf);
-		return;
+		if (dont_query_next_key)
+			dont_query_next_key = false;
+		else {
+			resetcomplete();
+			char buf[] = { text[0], 0 }; // please forgive me, encoding gods
+			strcat_s(commandbuf, buf);
+			return;
+		}
 	}
 
-	if(saycommandon)                                // keystrokes go to commandline
+	if (saycommandon)                                // keystrokes go to commandline
 	{
 		if(isdown)
 		{
@@ -212,7 +223,9 @@ void keypress(int code, bool isdown, bool textinput, char text[32])
 				case SDLK_v:
 					if(SDL_GetModState()&(KMOD_LCTRL|KMOD_RCTRL)) { pasteconsole(); return; };
 #endif
-				default: break; // idk
+				default:
+					resetcomplete();
+					break;
 			};
 		} else {
 			if (code == SDLK_RETURN)
