@@ -36,7 +36,7 @@ void quit()                     // normal exit
 };
 COMMAND(quit, ARG_NONE);
 
-void fatal(char *s, char *o)    // failure exit
+void fatal(const char *s, const char *o)    // failure exit
 {
 	sprintf_sd(msg)("%s%s (%s)\n", s, o, SDL_GetError());
 	cleanup(msg);
