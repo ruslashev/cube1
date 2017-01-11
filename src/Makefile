@@ -1,48 +1,18 @@
 CXX=g++
-CXXOPTFLAGS=-Wall -fsigned-char -fomit-frame-pointer -fpermissive -w -Wno-Write-strings -Wno-Unused-variable -g
+CXXOPTFLAGS=-Wall -fsigned-char -fomit-frame-pointer -fpermissive -w \
+			-Wno-Write-strings -Wno-Unused-variable -g
 CXXFLAGS=$(CXXOPTFLAGS) `sdl2-config --cflags`
 
 CLIENT_LIBS=-lenet `sdl2-config --libs` -lSDL2_image -lSDL_mixer -lz -lGL -lGLU -lX11
-CLIENT_OBJS= \
-			 client.o \
-			 clientextras.o \
-			 clientgame.o \
-			 clients2c.o \
-			 command.o \
-			 console.o \
-			 editing.o \
-			 entities.o \
-			 main.o \
-			 menus.o \
-			 monster.o \
-			 physics.o \
-			 rendercubes.o \
-			 renderextras.o \
-			 rendergl.o \
-			 rendermd2.o \
-			 renderparticles.o \
-			 rendertext.o \
-			 rndmap.o \
-			 savegamedemo.o \
-			 server.o \
-			 serverbrowser.o \
-			 serverms.o \
-			 serverutil.o \
-			 sound.o \
-			 tools.o \
-			 weapon.o \
-			 world.o \
-			 worldio.o \
-			 worldlight.o \
-			 worldocull.o \
-			 worldrender.o
+CLIENT_OBJS= client.o clientextras.o clientgame.o clients2c.o command.o \
+			 console.o editing.o entities.o main.o menus.o monster.o physics.o \
+			 rendercubes.o renderextras.o rendergl.o rendermd2.o \
+			 renderparticles.o rendertext.o rndmap.o savegamedemo.o server.o \
+			 serverbrowser.o serverms.o serverutil.o sound.o tools.o weapon.o \
+			 world.o worldio.o worldlight.o worldocull.o worldrender.o
 
 SERVER_LIBS=-lenet
-SERVER_OBJS= \
-			 standalone.o \
-			 serverms.o \
-			 server.o \
-			 tools.o
+SERVER_OBJS= standalone.o serverms.o server.o tools.o
 
 default: all
 
